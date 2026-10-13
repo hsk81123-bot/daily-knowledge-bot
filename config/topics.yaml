@@ -1,0 +1,193 @@
+# 데일리 지식 봇 설정
+# - 매일 아래 topics 중 하나를 무작위로 골라, 그 주제의 개념 하나를 공부 노트로 보냅니다.
+# - 주제를 늘리려면 topics에 항목을 하나 더 추가하면 됩니다.
+# - concepts는 "아직 안 배운 것"부터 차례로 무작위 선택됩니다. 다 배우면 Claude가 새 개념을 고르거나
+#   (API 키가 있을 때) 가장 오래전에 배운 개념부터 복습합니다.
+
+settings:
+  timezone: Asia/Seoul
+  avoid_recent_days: 3        # 최근 N일 안에 보낸 주제는 다시 고르지 않음(모든 주제가 막히면 무시)
+  retention_days: 365         # 기록 보관 기간
+  audience: "배터리와 AI를 함께 공부하는 대학원·연구자 수준 독자"
+  quiz_as_poll: true          # 퀴즈를 텔레그램 퀴즈 투표로 보냄(길이 제한을 넘으면 본문의 스포일러로 대체)
+
+telegram:
+  bot_token_env: TELEGRAM_BOT_TOKEN
+  chat_id_env: TELEGRAM_CHAT_ID
+
+topics:
+  - key: battery-materials
+    category: 배터리
+    name: 소재
+    emoji: "🧪"
+    description: 양극·음극·전해질·분리막 소재의 구조, 특성, 열화 원리
+    concepts:
+      - { name: "층상 양극재 NCM의 구조와 니켈 함량", en: "Lithium nickel manganese cobalt oxide cathode" }
+      - { name: "올리빈 구조 LFP 양극재", en: "Lithium iron phosphate" }
+      - { name: "스피넬 LMO 양극재", en: "Lithium manganese oxide spinel" }
+      - { name: "흑연 음극과 리튬 삽입(staging)", en: "Graphite intercalation compound" }
+      - { name: "실리콘 음극의 부피 팽창 문제", en: "Silicon anode" }
+      - { name: "리튬 금속 음극과 덴드라이트", en: "Lithium metal anode dendrite" }
+      - { name: "황화물·산화물 고체 전해질", en: "Solid-state electrolyte" }
+      - { name: "LiPF6-카보네이트 액체 전해질", en: "Lithium hexafluorophosphate" }
+      - { name: "분리막의 역할과 셧다운 기능", en: "Battery separator" }
+      - { name: "바인더와 도전재", en: "Binder and conductive additive in battery electrode" }
+      - { name: "양이온 혼합(cation mixing)", en: "Cation mixing in layered cathode" }
+      - { name: "단결정 양극재와 입자 미세균열", en: "Single-crystal cathode microcracking" }
+      - { name: "고니켈 양극의 상전이와 산소 방출", en: "High-nickel cathode phase transition oxygen release" }
+      - { name: "나트륨 이온 배터리 소재", en: "Sodium-ion battery" }
+      - { name: "리튬-황 배터리와 폴리설파이드 셔틀", en: "Lithium–sulfur battery" }
+
+  - key: battery-interface
+    category: 배터리
+    name: 계면
+    emoji: "🧱"
+    description: 전극/전해질 계면에서 일어나는 반응, 피막 형성, 계면 저항
+    concepts:
+      - { name: "SEI(고체 전해질 계면)의 형성과 조성", en: "Solid electrolyte interphase" }
+      - { name: "CEI(양극 전해질 계면)", en: "Cathode electrolyte interphase" }
+      - { name: "전기이중층 구조(Helmholtz, Gouy-Chapman, Stern)", en: "Double layer (surface science)" }
+      - { name: "탈용매화(desolvation)와 계면 전하전달", en: "Desolvation lithium ion interface charge transfer" }
+      - { name: "리튬 도금(lithium plating)", en: "Lithium plating" }
+      - { name: "SEI 형성 첨가제 FEC·VC", en: "Fluoroethylene carbonate electrolyte additive" }
+      - { name: "전이금속 용출과 크로스토크", en: "Transition metal dissolution cathode" }
+      - { name: "양극 표면 코팅(Al2O3, LiNbO3 등)", en: "Cathode surface coating" }
+      - { name: "고체전해질/전극 계면의 공간전하층", en: "Space charge layer solid electrolyte" }
+      - { name: "전고체 전지의 계면 접촉 손실(화학-기계적 열화)", en: "Chemo-mechanical degradation solid-state battery" }
+      - { name: "인공 SEI", en: "Artificial solid electrolyte interphase" }
+      - { name: "가스 발생 메커니즘", en: "Gas evolution lithium-ion battery" }
+      - { name: "포메이션 공정과 초기 쿨롱 효율", en: "Battery formation process" }
+      - { name: "용매화 구조와 고농도·국부고농도 전해질", en: "Localized high-concentration electrolyte" }
+      - { name: "계면 저항의 분리와 해석", en: "Interfacial resistance lithium-ion battery" }
+
+  - key: battery-electrochemistry
+    category: 배터리
+    name: 전기화학
+    emoji: "⚡"
+    description: 전극 반응의 열역학·속도론·물질전달
+    concepts:
+      - { name: "네른스트 식과 평형 전위", en: "Nernst equation" }
+      - { name: "버틀러-볼머 식과 교환 전류 밀도", en: "Butler–Volmer equation" }
+      - { name: "타펠 식과 타펠 기울기", en: "Tafel equation" }
+      - { name: "과전압의 종류(활성화·농도·저항)", en: "Overpotential" }
+      - { name: "패러데이 법칙과 이론 용량 계산", en: "Faraday's laws of electrolysis" }
+      - { name: "쿨롱 효율과 에너지 효율", en: "Coulombic efficiency" }
+      - { name: "Fick 확산과 고체 내 확산 계수", en: "Fick's laws of diffusion" }
+      - { name: "전기화학 창(electrochemical window)", en: "Electrochemical window" }
+      - { name: "OCV, 엔트로피 계수, 가역 발열", en: "Open-circuit voltage entropy coefficient" }
+      - { name: "2전극·3전극 셀과 기준 전극", en: "Reference electrode" }
+      - { name: "이온 전도도와 리튬 이온 전이수", en: "Transference number" }
+      - { name: "C-rate와 율속 특성", en: "C-rate battery" }
+      - { name: "상전이 반응 vs 고용체 반응의 전압 곡선", en: "Solid solution two-phase reaction electrode voltage profile" }
+      - { name: "뉴먼(Doyle-Fuller-Newman) 모델의 기본 가정", en: "Doyle–Fuller–Newman model" }
+      - { name: "전기화학 퍼텐셜과 페르미 준위", en: "Electrochemical potential" }
+
+  - key: battery-analysis
+    category: 배터리
+    name: 분석법
+    emoji: "🔬"
+    description: 전기화학 측정법과 구조·표면 분석법, 데이터 해석
+    concepts:
+      - { name: "순환 전압전류법(CV)", en: "Cyclic voltammetry" }
+      - { name: "전기화학 임피던스 분광법(EIS)과 등가회로", en: "Electrochemical impedance spectroscopy" }
+      - { name: "GITT로 확산 계수 구하기", en: "Galvanostatic intermittent titration technique" }
+      - { name: "dQ/dV 미분 용량 분석", en: "Incremental capacity analysis" }
+      - { name: "DRT(완화 시간 분포) 분석", en: "Distribution of relaxation times" }
+      - { name: "XRD와 operando XRD", en: "X-ray diffraction" }
+      - { name: "XPS로 SEI 조성 분석하기", en: "X-ray photoelectron spectroscopy" }
+      - { name: "SEM·TEM 단면 분석", en: "Transmission electron microscopy" }
+      - { name: "ToF-SIMS 깊이 분석", en: "Time-of-flight secondary ion mass spectrometry" }
+      - { name: "라만 분광법", en: "Raman spectroscopy" }
+      - { name: "X선 흡수 분광법(XANES/EXAFS)", en: "X-ray absorption spectroscopy" }
+      - { name: "고체 NMR", en: "Solid-state nuclear magnetic resonance" }
+      - { name: "DEMS/OEMS 가스 분석", en: "Differential electrochemical mass spectrometry" }
+      - { name: "DSC·ARC 열안전성 평가", en: "Accelerating rate calorimetry" }
+      - { name: "사이클 수명 시험과 열화 모드 분리(LLI, LAM)", en: "Battery degradation modes loss of lithium inventory" }
+
+  - key: ai-machine-learning
+    category: AI
+    name: 머신러닝
+    emoji: "📊"
+    description: 고전 머신러닝 알고리즘과 모델 평가
+    concepts:
+      - { name: "편향-분산 트레이드오프", en: "Bias–variance tradeoff" }
+      - { name: "L1·L2 정규화", en: "Regularization (mathematics)" }
+      - { name: "교차검증과 데이터 누수", en: "Cross-validation (statistics)" }
+      - { name: "결정 트리와 랜덤 포레스트", en: "Random forest" }
+      - { name: "그래디언트 부스팅(XGBoost, LightGBM)", en: "Gradient boosting" }
+      - { name: "서포트 벡터 머신과 커널 트릭", en: "Support vector machine" }
+      - { name: "주성분 분석(PCA)", en: "Principal component analysis" }
+      - { name: "k-means와 군집 평가", en: "K-means clustering" }
+      - { name: "가우시안 프로세스 회귀", en: "Gaussian process" }
+      - { name: "베이지안 최적화", en: "Bayesian optimization" }
+      - { name: "분류 평가지표(정밀도, 재현율, ROC-AUC)", en: "Precision and recall" }
+      - { name: "특성 공학과 특성 중요도(SHAP)", en: "Shapley value machine learning" }
+      - { name: "불균형 데이터 다루기", en: "Imbalanced data classification" }
+      - { name: "하이퍼파라미터 튜닝 전략", en: "Hyperparameter optimization" }
+      - { name: "능동 학습(active learning)", en: "Active learning (machine learning)" }
+
+  - key: ai-deep-learning
+    category: AI
+    name: 딥러닝
+    emoji: "🧠"
+    description: 신경망의 학습 원리와 주요 아키텍처
+    concepts:
+      - { name: "역전파와 연쇄 법칙", en: "Backpropagation" }
+      - { name: "활성화 함수(ReLU, GELU 등)", en: "Activation function" }
+      - { name: "최적화 알고리즘(SGD, Adam)", en: "Stochastic gradient descent" }
+      - { name: "배치 정규화와 레이어 정규화", en: "Batch normalization" }
+      - { name: "드롭아웃과 과적합 방지", en: "Dilution (neural networks)" }
+      - { name: "합성곱 신경망(CNN)", en: "Convolutional neural network" }
+      - { name: "RNN과 LSTM", en: "Long short-term memory" }
+      - { name: "어텐션 메커니즘", en: "Attention (machine learning)" }
+      - { name: "트랜스포머 구조", en: "Transformer (deep learning architecture)" }
+      - { name: "잔차 연결(ResNet)", en: "Residual neural network" }
+      - { name: "그래프 신경망(GNN)과 분자·결정 구조", en: "Graph neural network" }
+      - { name: "오토인코더와 VAE", en: "Variational autoencoder" }
+      - { name: "확산 모델", en: "Diffusion model" }
+      - { name: "전이 학습과 파인튜닝", en: "Transfer learning" }
+      - { name: "물리 정보 신경망(PINN)", en: "Physics-informed neural networks" }
+
+  - key: ai-llm
+    category: AI
+    name: LLM
+    emoji: "💬"
+    description: 대규모 언어 모델의 구조, 학습, 활용
+    concepts:
+      - { name: "토크나이저(BPE)", en: "Byte pair encoding" }
+      - { name: "임베딩과 의미 공간", en: "Word embedding" }
+      - { name: "다음 토큰 예측과 사전학습", en: "Large language model pretraining" }
+      - { name: "스케일링 법칙", en: "Neural scaling law" }
+      - { name: "인스트럭션 튜닝", en: "Instruction tuning" }
+      - { name: "RLHF와 DPO", en: "Reinforcement learning from human feedback" }
+      - { name: "LoRA와 파라미터 효율적 파인튜닝", en: "Low-rank adaptation" }
+      - { name: "RAG(검색 증강 생성)", en: "Retrieval-augmented generation" }
+      - { name: "디코딩 전략(temperature, top-p)", en: "Top-p sampling" }
+      - { name: "컨텍스트 윈도와 KV 캐시", en: "KV cache transformer" }
+      - { name: "환각(hallucination)과 그 원인", en: "Hallucination (artificial intelligence)" }
+      - { name: "LLM 평가와 벤치마크", en: "Large language model evaluation benchmark" }
+      - { name: "도구 사용과 LLM 에이전트", en: "Large language model agent tool use" }
+      - { name: "양자화(quantization)", en: "Quantization (machine learning)" }
+      - { name: "전문가 혼합(MoE)", en: "Mixture of experts" }
+
+  - key: ai-ontology
+    category: AI
+    name: 온톨로지
+    emoji: "🕸️"
+    description: 지식 표현, 시맨틱 웹 표준, 지식 그래프
+    concepts:
+      - { name: "온톨로지란 무엇인가(개념화의 명세)", en: "Ontology (information science)" }
+      - { name: "RDF 트리플과 URI", en: "Resource Description Framework" }
+      - { name: "RDFS와 OWL", en: "Web Ontology Language" }
+      - { name: "클래스·속성·개체(TBox와 ABox)", en: "Abox" }
+      - { name: "SPARQL 질의", en: "SPARQL" }
+      - { name: "기술 논리(description logic)", en: "Description logic" }
+      - { name: "추론기(reasoner)와 일관성 검사", en: "Semantic reasoner" }
+      - { name: "지식 그래프", en: "Knowledge graph" }
+      - { name: "상위 온톨로지(BFO 등)", en: "Basic Formal Ontology" }
+      - { name: "SKOS와 용어 체계", en: "Simple Knowledge Organization System" }
+      - { name: "SHACL로 데이터 검증하기", en: "SHACL" }
+      - { name: "온톨로지 정렬(alignment)", en: "Ontology alignment" }
+      - { name: "배터리 도메인 온톨로지(EMMO, BattINFO)", en: "Elementary Multiperspective Material Ontology" }
+      - { name: "지식 그래프 임베딩(TransE 등)", en: "Knowledge graph embedding" }
+      - { name: "LLM과 지식 그래프의 결합(GraphRAG)", en: "Knowledge graph large language model" }

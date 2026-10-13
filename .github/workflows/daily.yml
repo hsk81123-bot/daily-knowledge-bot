@@ -1,0 +1,58 @@
+name: Daily knowledge
+
+on:
+  schedule:
+    # 매일 07:00 KST에 받기 위해 10분 일찍 예약(GitHub cron은 늦게 시작하는 경우가 많음). cron은 UTC 기준.
+    - cron: "50 21 * * *"
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "주제(비우면 무작위). 예: 계면, 분석법, LLM, ai-ontology"
+        required: false
+        default: ""
+      force:
+        description: "오늘 이미 보냈어도 다시 보내기"
+        type: boolean
+        default: false
+      dry_run:
+        description: "발송·저장 없이 로그로만 출력"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: knowledge-bot-data   # 명령 폴링과 같은 그룹: data/history.json 동시 수정 방지
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Send today's lesson
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+          INPUT_TOPIC: ${{ github.event.inputs.topic }}
+          INPUT_FORCE: ${{ github.event.inputs.force }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          args=(send)
+          if [ -n "${INPUT_TOPIC}" ]; then args+=(--topic "${INPUT_TOPIC}"); fi
+          if [ "${INPUT_FORCE}" = "true" ]; then args+=(--force); fi
+          if [ "${INPUT_DRY_RUN}" = "true" ]; then args+=(--dry-run); fi
+          python -m knowledge_bot "${args[@]}"
+      - name: Commit history
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          scripts/commit-data.sh "chore: 오늘의 공부 노트 기록"
