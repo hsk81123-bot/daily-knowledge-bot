@@ -7,6 +7,7 @@ from urllib.parse import quote
 
 import requests
 
+from . import library
 from .config import Settings
 from .selector import Pick
 
@@ -216,7 +217,13 @@ def generate_from_wikipedia(pick: Pick) -> dict:
 
 
 def make_lesson(pick: Pick, settings: Settings, client=None) -> dict:
-    """Claude 키가 있으면 Claude로, 없거나 실패하면 위키백과 요약으로 노트를 만든다."""
+    """미리 써 둔 노트가 있으면 그것을, 없으면 Claude로, 그것도 안 되면 위키백과 요약으로 노트를 만든다."""
+    if pick.concept is not None:
+        stored = library.find(pick.topic.key, pick.concept.name)
+        if stored:
+            stored["concept_en"] = stored["concept_en"] or pick.concept.en
+            stored["review"] = pick.review
+            return stored
     if settings.anthropic_key or client is not None:
         try:
             return generate_with_claude(pick, settings, client=client)
