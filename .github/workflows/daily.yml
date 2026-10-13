@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       topic:
-        description: "주제(비우면 무작위). 예: 계면, 분석법, LLM, ai-ontology"
+        description: "주제(비우면 무작위). 예 - 계면, 분석법, LLM, ai-ontology"
         required: false
         default: ""
       force:
@@ -15,7 +15,7 @@ on:
         type: boolean
         default: false
       dry_run:
-        description: "발송·저장 없이 로그로만 출력"
+        description: "미리보기: 켜면 텔레그램으로 보내지 않고 로그에만 출력"
         type: boolean
         default: false
 

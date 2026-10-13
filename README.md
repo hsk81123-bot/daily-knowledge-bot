@@ -8,9 +8,10 @@
 | 🔋 배터리 | 🧪 소재 · 🧱 계면 · ⚡ 전기화학 · 🔬 분석법 |
 | 🤖 AI | 📊 머신러닝 · 🧠 딥러닝 · 💬 LLM · 🕸️ 온톨로지 |
 
-- 주제마다 공부할 개념 15개를 `config/topics.yaml`에 준비해 두었습니다(총 120개). 같은 개념은 다시 보내지 않습니다.
-- 최근 3일 안에 보낸 주제는 피해서 고르기 때문에 같은 주제가 연달아 나오지 않습니다.
-- 한 주제의 개념을 다 배우면, Claude 키가 있을 때는 Claude가 아직 안 배운 새 개념을 고르고, 키가 없으면 가장 오래전에 배운 개념부터 복습합니다.
+- 주제마다 개념 15개, 총 **120편의 공부 노트를 미리 써서** `content/lessons/`에 넣어 두었습니다. **API 키 없이, 비용 0원**으로 매일 완성된 노트가 옵니다.
+- 같은 개념은 다시 보내지 않습니다. 최근 3일 안에 보낸 주제는 피해서 고르기 때문에 같은 주제가 연달아 나오지도 않습니다.
+- 120편을 다 보내면(약 4개월) 가장 오래전에 배운 개념부터 **복습** 표시를 달고 다시 보냅니다.
+  (선택) `ANTHROPIC_API_KEY`를 넣으면 그때부터는 Claude가 아직 안 배운 새 개념을 골라 노트를 새로 씁니다.
 - 노트 구성: 한 줄 요약 → 본문 3~4단락 → 핵심 수식 → 예시 → 흔한 오해 → 배터리 × AI 연결점 → 키워드 → 다음에 공부할 것.
 - 퀴즈는 **텔레그램 퀴즈 투표**로 따로 보냅니다(정답을 누르면 해설이 보임). 길이 제한을 넘으면 본문에 스포일러로 넣습니다.
 - 보낸 노트는 `data/lessons/`에 마크다운으로 쌓여서 GitHub에서 복습 노트처럼 볼 수 있습니다.
@@ -64,11 +65,14 @@ DFN 같은 물리 기반 모델은 계면마다 버틀러-볼머 식을 쓰고, 
 
 ## 동작 방식
 
-| 상황 | 결과 |
-|---|---|
-| `ANTHROPIC_API_KEY` 있음 | Claude(기본 `claude-opus-5-5`)가 구조화된 JSON으로 노트를 작성 |
-| 키 없음 또는 Claude 실패 | 위키백과 요약(한국어 문서가 있으면 한국어)과 학습 링크로 대신 발송 |
-| 위키백과도 실패 | 개념 이름과 검색 링크만 발송(발송 자체는 계속) |
+노트는 아래 순서로 찾아서 보냅니다.
+
+| 순서 | 출처 | 언제 |
+|---|---|---|
+| 1 | `content/lessons/<주제>.yaml`에 미리 써 둔 노트 | 기본(120개 개념 모두 준비됨) |
+| 2 | Claude(기본 `claude-opus-5-5`)가 새로 쓴 노트 | 라이브러리에 없는 개념이고 `ANTHROPIC_API_KEY`가 있을 때 |
+| 3 | 위키백과 요약(한국어 문서가 있으면 한국어) | 라이브러리에 없고 키도 없을 때 |
+| 4 | 개념 이름과 검색 링크만 | 위의 것이 모두 실패했을 때(발송 자체는 계속) |
 
 링크 버튼은 위키백과, Google Scholar, (AI 주제) arXiv / (배터리 주제) YouTube **검색 링크**라서 깨진 주소가 나오지 않습니다.
 Claude에게는 URL을 쓰지 말고, 확실히 아는 교과서·리뷰 논문만 참고 문헌으로 적도록 지시했습니다.
@@ -77,10 +81,12 @@ Claude에게는 URL을 쓰지 말고, 확실히 아는 교과서·리뷰 논문�
 
 ```text
 config/topics.yaml          주제 8개와 개념 목록, 설정
+content/lessons/            미리 써 둔 공부 노트 120편(주제별 YAML)
 knowledge_bot/
   main.py                   CLI (send / commands)
   selector.py               오늘의 주제·개념 고르기
-  lesson.py                 Claude 노트 생성, 위키백과 대체
+  library.py                미리 써 둔 노트 읽기
+  lesson.py                 노트 고르기: 라이브러리 → Claude → 위키백과
   formatter.py              텔레그램 HTML, 퀴즈 투표, 마크다운 보관본
   telegram.py               Bot API 호출(재시도, chat not found 안내)
   history.py                data/history.json 기록과 정리
@@ -112,7 +118,7 @@ tests/                      pytest(네트워크는 전부 모킹)
 |---|---|---|
 | `TELEGRAM_BOT_TOKEN` | ✅ | BotFather 토큰 |
 | `TELEGRAM_CHAT_ID` | ✅ | 위에서 확인한 숫자 |
-| `ANTHROPIC_API_KEY` | 선택 | 없으면 위키백과 요약으로 발송 |
+| `ANTHROPIC_API_KEY` | 선택 | 없어도 됩니다. 미리 써 둔 노트를 다 쓴 뒤 새 노트를 만들 때만 사용 |
 
 모델을 바꾸려면 같은 화면의 **Variables** 탭에 `CLAUDE_MODEL`(예: `claude-haiku-5-5`)을 추가하세요.
 
@@ -125,7 +131,7 @@ tests/                      pytest(네트워크는 전부 모킹)
 
 ### 6. 첫 실행
 **Actions → Daily knowledge → Run workflow**
-- `dry_run`을 켜면 발송 없이 로그에 메시지만 찍습니다. 처음엔 이걸로 확인해 보세요.
+- **`dry_run`은 끈 채로** 실행해야 텔레그램으로 옵니다. `dry_run`을 켜면 발송·기록 없이 Actions 로그에만 메시지를 찍습니다(미리보기용).
 - `topic`에 `계면`, `LLM` 같은 이름을 넣으면 그 주제로 보냅니다.
 - 실패하면 로그를 Claude에게 보여 주세요.
 
@@ -148,7 +154,7 @@ tests/                      pytest(네트워크는 전부 모킹)
 
 ## 비용과 사용량
 
-- **Claude API**: Claude 구독(Pro/Max)과 API는 결제가 따로입니다. [console.anthropic.com](https://console.anthropic.com)에서 키를 만들고 크레딧을 충전해야 합니다.
+- **Claude API**: 기본 설정(키 없음)에서는 쓰지 않으므로 비용이 없습니다. 키를 넣을 경우 Claude 구독(Pro/Max)과 API는 결제가 따로입니다. [console.anthropic.com](https://console.anthropic.com)에서 키를 만들고 크레딧을 충전해야 합니다.
   노트 한 편은 대략 입력 2천 토큰, 출력 수천 토큰이라 `claude-opus-5-5` 기준 한 편에 대략 0.1달러 안팎, 매일 받으면 한 달에 몇 달러 수준입니다.
   더 아끼려면 `CLAUDE_MODEL=claude-haiku-5-5`로 바꾸세요(노트 품질은 조금 떨어질 수 있음).
 - **GitHub Actions**: 공개 저장소는 무료입니다. 비공개 저장소는 월 2,000분 무료인데, 명령 폴링이 1시간마다 1분씩 잡혀 **한 달 약 720분**,
@@ -170,6 +176,9 @@ tests/                      pytest(네트워크는 전부 모킹)
 ```
 
 - `en`은 위키백과·Scholar 검색어로 쓰입니다.
+- 새 개념의 노트는 `content/lessons/<주제 key>.yaml`에 같은 형식으로 추가하세요(`concept`은 `topics.yaml`의 `name`과 글자까지 같아야 함).
+  노트를 안 쓰면 그 개념은 Claude(키가 있을 때)나 위키백과 요약으로 보냅니다.
+  `python -m pytest tests/test_library.py`가 형식(퀴즈 4지선다, 텔레그램 투표 길이 제한 등)을 검사합니다.
 - 기존 주제의 `concepts`에 개념을 더 넣어도 됩니다. 이미 배운 개념은 기록을 보고 건너뜁니다.
 - `settings.avoid_recent_days`(최근 며칠 주제 피하기), `settings.audience`(독자 수준), `settings.quiz_as_poll`로 동작을 조정할 수 있습니다.
 
@@ -202,5 +211,6 @@ python -m pytest -q                          # 테스트
 | `Unauthorized` | 봇 토큰이 틀림 |
 | 커밋 단계에서 403 | Workflow permissions를 Read and write로 바꾸지 않음 |
 | Run workflow 버튼이 없음 | 워크플로가 아직 main에 머지되지 않음 |
-| 노트 끝에 "위키백과 요약으로 보냈습니다" | `ANTHROPIC_API_KEY`가 없거나 크레딧 부족·API 오류. 실행 로그 확인 |
+| Run workflow는 성공인데 메시지가 안 옴 | `dry_run`을 켜고 실행함. 끄고 다시 실행 |
+| 노트 끝에 "위키백과 요약으로 보냈습니다" | 미리 써 둔 노트가 없는 개념이고 Claude 키도 없음. `content/lessons/`에 노트 추가 |
 | 같은 날 두 번 안 옴 | 정상. 하루 한 번만 보냄. 다시 받으려면 `force` 또는 `/now` |

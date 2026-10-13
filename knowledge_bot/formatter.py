@@ -106,7 +106,7 @@ def message_blocks(lesson: dict, topic: Topic, day: date, include_quiz_text: boo
     if lesson.get("references"):
         blocks.append("<b>📚 참고 문헌</b>\n" + "\n".join(f"• {_e(r)}" for r in lesson["references"]))
     if lesson.get("source") == "wikipedia":
-        blocks.append("<i>ANTHROPIC_API_KEY가 없거나 생성에 실패해 위키백과 요약으로 보냈습니다.</i>")
+        blocks.append("<i>미리 써 둔 노트가 없는 개념이라 위키백과 요약으로 보냈습니다.</i>")
     return blocks
 
 
