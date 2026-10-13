@@ -1,0 +1,588 @@
+# AI › 딥러닝 공부 노트
+
+- concept: "역전파와 연쇄 법칙"
+  title: "역전파: 오차를 거꾸로 흘려 모든 가중치의 기울기를 구한다"
+  level: 입문
+  one_liner: >-
+    역전파는 연쇄 법칙을 이용해 출력의 손실에서 시작해 층을 거꾸로 거슬러 가며 모든 가중치에 대한 손실의 기울기를 한 번에 효율적으로 계산하는 알고리즘이다.
+  sections:
+    - heading: "순전파와 역전파"
+      body: >-
+        순전파에서는 입력이 층을 차례로 지나며 출력과 손실이 계산되고, 중간값이 저장된다. 역전파에서는 손실의 출력에 대한 기울기에서 시작해, 각 층에서 '위에서 내려온 기울기 × 이 층의 국소 미분'을
+        계산해 아래 층으로 넘긴다. 이렇게 모든 가중치의 기울기를 순전파 한 번과 비슷한 계산량으로 얻는다.
+    - heading: "연쇄 법칙"
+      body: >-
+        y = f(g(x))이면 dy/dx = f′(g(x))·g′(x)다. 신경망은 함수가 여러 겹 합성된 것이므로 연쇄 법칙을 반복 적용하면 된다. 현대 프레임워크(PyTorch, JAX)는 계산 그래프를 기록해
+        이 과정을 자동으로 해 주는데, 이것이 역방향 모드 자동 미분이다. 출력은 하나(손실)이고 입력(가중치)은 수백만 개일 때 역방향 모드가 가장 효율적이다.
+    - heading: "기울기 소실과 폭발"
+      body: >-
+        깊은 망에서는 기울기가 여러 층의 미분을 곱한 값이 되므로, 각 값이 1보다 작으면 0으로 사라지고 1보다 크면 폭발한다. 시그모이드 대신 ReLU 계열 활성화, 적절한 초기화,
+        정규화 층, 잔차 연결, 기울기 자르기(gradient clipping)가 이 문제를 줄인다.
+  formula: |
+    ∂L/∂W_l = (∂L/∂a_l) · (∂a_l/∂W_l)
+    ∂L/∂a_{l−1} = (∂L/∂a_l) · (∂a_l/∂a_{l−1})   (층 l에서 l−1로 전달)
+  example: >-
+    PyTorch에서 loss.backward()를 한 줄 호출하면 계산 그래프를 따라 역전파가 일어나 모든 파라미터의 .grad에 기울기가 채워진다. 그다음 optimizer.step()이 가중치를 갱신한다.
+  misconception: >-
+    역전파가 곧 학습 알고리즘이라고 생각하기 쉽지만, 역전파는 기울기를 계산하는 방법일 뿐이다. 가중치를 실제로 바꾸는 것은 SGD나 Adam 같은 최적화 알고리즘이다.
+  connection: >-
+    자동 미분은 신경망뿐 아니라 전지 모델에도 쓰인다. 예를 들어 미분 가능한 전기화학 모델을 만들면 측정 전압에 맞도록 확산 계수 같은 파라미터를 기울기 기반으로 추정할 수 있다.
+  quiz:
+    question: "역전파가 실제로 계산해 주는 것은?"
+    choices: ["최적의 학습률", "손실의 각 가중치에 대한 기울기", "새 데이터", "정답 레이블"]
+    answer_index: 1
+    explanation: "역전파는 연쇄 법칙으로 ∂L/∂W를 효율적으로 구하며, 가중치 갱신은 최적화기가 한다."
+  keywords:
+    - {ko: "역전파", en: "backpropagation"}
+    - {ko: "자동 미분", en: "automatic differentiation"}
+    - {ko: "기울기 소실", en: "vanishing gradient"}
+  next_topics: ["최적화 알고리즘(SGD, Adam)", "활성화 함수(ReLU, GELU 등)", "잔차 연결(ResNet)"]
+  references: ["D. E. Rumelhart, G. E. Hinton, R. J. Williams, Learning representations by back-propagating errors, Nature, 1986", "I. Goodfellow, Y. Bengio, A. Courville, Deep Learning, MIT Press, 2016"]
+
+- concept: "활성화 함수(ReLU, GELU 등)"
+  title: "활성화 함수: 신경망에 곡선을 넣는 장치"
+  level: 입문
+  one_liner: >-
+    활성화 함수는 층마다 출력에 비선형성을 더해 신경망이 복잡한 함수를 표현하게 하며, 기울기가 잘 흐르는지에 따라 학습 속도와 안정성이 크게 달라진다.
+  sections:
+    - heading: "왜 필요한가"
+      body: >-
+        선형 층을 여러 개 쌓아도 결과는 하나의 선형 변환이다. 층 사이에 비선형 함수를 넣어야 깊이가 의미를 갖고, 충분히 넓은 망이 임의의 연속 함수를 근사할 수 있게 된다(보편 근사 정리).
+    - heading: "시그모이드에서 ReLU로"
+      body: >-
+        시그모이드와 tanh는 입력이 크거나 작으면 기울기가 0에 가까워져 깊은 망에서 기울기 소실을 일으킨다. ReLU(max(0, x))는 양수 구간에서 기울기가 1이라 기울기가 잘 흐르고 계산이 매우 싸서
+        딥러닝 확산에 크게 기여했다. 단점은 음수 입력에서 기울기가 0이라 일부 뉴런이 영영 꺼지는 '죽은 ReLU' 문제다.
+    - heading: "최근의 선택"
+      body: >-
+        Leaky ReLU는 음수 쪽에 작은 기울기를 둔다. GELU는 입력에 '그 값이 양수일 확률'을 곱한 부드러운 함수로 트랜스포머에서 표준처럼 쓰인다. SiLU(Swish)와 이를 게이트 구조로 쓴
+        SwiGLU는 최근 LLM에서 많이 쓰인다. 출력층에서는 회귀는 선형, 다중 분류는 소프트맥스를 쓴다.
+  formula: |
+    ReLU(x) = max(0, x)
+    GELU(x) = x · Φ(x)   (Φ: 표준정규 누적분포)
+    SiLU(x) = x · σ(x)
+  example: >-
+    배터리 수명 회귀 모델에서 마지막 층에 ReLU를 쓰면 출력이 음수가 될 수 없지만 0 근처에서 기울기가 막힐 수 있다. 보통 마지막 층은 선형으로 두고 필요하면 로그 변환한 목표를 쓴다.
+  misconception: >-
+    더 복잡한 활성화 함수가 항상 더 좋은 것은 아니다. 대부분의 문제에서 ReLU·GELU 계열의 차이는 크지 않고, 초기화와 정규화, 학습률이 더 중요하다.
+  connection: >-
+    PINN처럼 출력의 2차 미분이 필요한 모델에서는 ReLU의 2차 미분이 0이라 문제가 생긴다. 그래서 tanh나 SiLU처럼 매끄러운 활성화를 쓴다.
+  quiz:
+    question: "ReLU가 시그모이드보다 깊은 망 학습에 유리한 주된 이유는?"
+    choices: ["출력이 항상 0~1이라서", "양수 구간 기울기가 1이라 기울기 소실이 적어서", "모든 입력에서 기울기가 0이라서", "계산이 더 복잡해서"]
+    answer_index: 1
+    explanation: "시그모이드는 포화 구간에서 기울기가 0에 가깝지만 ReLU는 양수 구간에서 기울기 1을 유지한다."
+  keywords:
+    - {ko: "활성화 함수", en: "activation function"}
+    - {ko: "죽은 ReLU", en: "dying ReLU"}
+    - {ko: "보편 근사 정리", en: "universal approximation theorem"}
+  next_topics: ["역전파와 연쇄 법칙", "물리 정보 신경망(PINN)"]
+  references: ["D. Hendrycks, K. Gimpel, Gaussian error linear units (GELUs), arXiv:1606.08415, 2016"]
+
+- concept: "최적화 알고리즘(SGD, Adam)"
+  title: "SGD와 Adam: 손실 지형을 내려가는 방법"
+  level: 중급
+  one_liner: >-
+    SGD는 작은 미니배치의 기울기로 가중치를 조금씩 내려가는 방법이고, Adam은 기울기의 이동 평균(모멘텀)과 크기의 이동 평균으로 파라미터마다 보폭을 자동 조절한다.
+  sections:
+    - heading: "확률적 경사 하강법"
+      body: >-
+        전체 데이터의 기울기 대신 무작위 미니배치(예: 32~512개)의 기울기로 갱신한다. 계산이 싸고, 기울기의 잡음이 날카로운 극소점을 벗어나게 도와 일반화에 유리할 수 있다.
+        모멘텀은 이전 갱신 방향을 일부 이어 가 골짜기에서 진동을 줄이고 평평한 방향으로 빨리 나아가게 한다.
+    - heading: "Adam"
+      body: >-
+        Adam은 기울기의 1차 모멘트(평균)와 2차 모멘트(제곱 평균)를 지수 이동 평균으로 추적하고, 1차 모멘트를 2차 모멘트의 제곱근으로 나눠 갱신한다. 기울기가 자주 큰 파라미터는 보폭이 줄고,
+        드물게 작은 파라미터는 보폭이 커진다. 기본값으로도 잘 작동해 가장 널리 쓰인다. 가중치 감쇠를 분리한 AdamW가 사실상 표준이다.
+    - heading: "학습률 일정"
+      body: >-
+        어떤 최적화기든 학습률이 가장 중요한 하이퍼파라미터다. 처음 몇 단계는 학습률을 서서히 올리는 워밍업, 이후 코사인이나 선형으로 줄이는 감소 일정을 흔히 쓴다.
+        학습률이 너무 크면 손실이 발산하고, 너무 작으면 학습이 매우 느리다.
+  formula: |
+    SGD+모멘텀: v ← βv + g,  w ← w − ηv
+    Adam: m ← β1·m + (1−β1)g,  s ← β2·s + (1−β2)g²
+          w ← w − η · m̂ / (√ŝ + ε)   (m̂, ŝ: 편향 보정)
+  example: >-
+    작은 배터리 데이터셋으로 신경망을 학습할 때 AdamW(학습률 1e-3, 가중치 감쇠 1e-4)와 코사인 감소 일정으로 시작하고, 검증 손실을 보며 학습률부터 조정하는 것이 일반적인 출발점이다.
+  misconception: >-
+    Adam이 항상 SGD보다 낫다고 생각하기 쉽지만, 이미지 분류 등 일부 분야에서는 잘 튜닝한 SGD+모멘텀이 더 좋은 일반화를 보이기도 한다.
+  connection: >-
+    전기화학 모델 파라미터를 측정 데이터에 맞추는 문제도 미분 가능하게 만들면 Adam으로 최적화할 수 있다. 다만 파라미터 크기가 몇 자릿수씩 달라 로그 변환이 중요하다.
+  quiz:
+    question: "AdamW가 Adam과 다른 점은?"
+    choices: ["모멘텀을 쓰지 않는다", "가중치 감쇠를 기울기 갱신과 분리해 적용한다", "학습률이 없다", "2차 모멘트를 쓰지 않는다"]
+    answer_index: 1
+    explanation: "AdamW는 가중치 감쇠를 적응형 보폭과 섞지 않고 따로 적용해 정규화 효과를 의도대로 낸다."
+  keywords:
+    - {ko: "확률적 경사 하강법", en: "stochastic gradient descent"}
+    - {ko: "모멘텀", en: "momentum"}
+    - {ko: "학습률 일정", en: "learning rate schedule"}
+  next_topics: ["배치 정규화와 레이어 정규화", "하이퍼파라미터 튜닝 전략"]
+  references: ["D. P. Kingma, J. Ba, Adam: A method for stochastic optimization, ICLR, 2015", "I. Loshchilov, F. Hutter, Decoupled weight decay regularization, ICLR, 2019"]
+
+- concept: "배치 정규화와 레이어 정규화"
+  title: "정규화 층: 층마다 입력의 크기를 맞춰 학습을 안정시킨다"
+  level: 중급
+  one_liner: >-
+    배치 정규화는 미니배치 안에서 특징별로, 레이어 정규화는 표본 하나 안에서 모든 특징에 걸쳐 평균과 분산을 맞춰, 깊은 망을 더 큰 학습률로 안정적으로 학습하게 한다.
+  sections:
+    - heading: "배치 정규화"
+      body: >-
+        각 특징(채널)마다 미니배치의 평균과 분산으로 값을 표준화한 뒤, 학습 가능한 크기(γ)와 이동(β)을 곱하고 더한다. 학습이 빨라지고 초기화에 덜 민감해져 CNN에서 표준이 되었다.
+        추론 때는 학습 중 모아 둔 이동 평균 통계를 쓴다. 배치가 작으면 통계가 불안정해 성능이 떨어진다.
+    - heading: "레이어 정규화"
+      body: >-
+        표본 하나의 모든 특징에 대해 평균과 분산을 구해 표준화한다. 배치 크기와 무관하고 학습과 추론이 같은 계산이라 RNN과 트랜스포머에서 표준이다. 최근 LLM은 평균 빼기를 생략하고
+        크기만 맞추는 RMSNorm을 많이 쓴다.
+    - heading: "왜 효과가 있나"
+      body: >-
+        처음에는 앞 층이 바뀌면서 뒤 층 입력 분포가 계속 변하는 문제(내부 공변량 변화)를 줄인다고 설명되었다. 이후 연구는 손실 지형을 더 매끄럽게 만들어 기울기가 안정되는 효과가 더 중요하다고 본다.
+        트랜스포머에서는 정규화를 잔차 연결 앞에 두는 Pre-LN 방식이 깊은 망 학습을 더 안정시킨다.
+  formula: |
+    x̂ = (x − μ) / √(σ² + ε),  y = γ·x̂ + β
+    BatchNorm: μ, σ를 배치 축으로 / LayerNorm: 특징 축으로
+    RMSNorm: y = γ · x / √(mean(x²) + ε)
+  example: >-
+    배치 크기를 2~4로밖에 못 쓰는 큰 3D 전극 이미지 분할 모델에서는 배치 정규화보다 그룹 정규화나 레이어 정규화를 쓰는 것이 안정적이다.
+  misconception: >-
+    정규화 층이 드롭아웃 같은 정규화(regularization)와 같은 뜻이라고 오해하기 쉽다. 이름이 비슷하지만 정규화 층(normalization)은 값의 크기를 맞추는 것이고, 과적합 방지는 부수 효과다.
+  connection: >-
+    배터리 시계열 모델에서 셀마다 측정 범위가 다르면 입력 표준화와 레이어 정규화가 함께 필요하다. 특히 셀 사이 편차가 큰 데이터에서 학습 안정성에 영향을 준다.
+  quiz:
+    question: "트랜스포머에서 배치 정규화 대신 레이어 정규화를 주로 쓰는 이유는?"
+    choices: ["배치 크기와 시퀀스 길이에 무관하게 동작해서", "파라미터가 없어서", "출력이 항상 양수라서", "합성곱에만 쓸 수 있어서"]
+    answer_index: 0
+    explanation: "레이어 정규화는 표본 하나 안에서 계산해 배치 크기·가변 길이 시퀀스와 무관하고 학습·추론이 같다."
+  keywords:
+    - {ko: "배치 정규화", en: "batch normalization"}
+    - {ko: "레이어 정규화", en: "layer normalization"}
+    - {ko: "RMS 정규화", en: "RMSNorm"}
+  next_topics: ["트랜스포머 구조", "잔차 연결(ResNet)"]
+  references: ["S. Ioffe, C. Szegedy, Batch normalization: accelerating deep network training by reducing internal covariate shift, ICML, 2015", "J. L. Ba, J. R. Kiros, G. E. Hinton, Layer normalization, arXiv:1607.06450, 2016"]
+
+- concept: "드롭아웃과 과적합 방지"
+  title: "드롭아웃: 뉴런을 무작위로 꺼서 서로 기대지 않게 한다"
+  level: 입문
+  one_liner: >-
+    드롭아웃은 학습 중 뉴런 출력을 확률 p로 무작위로 0으로 만들어, 특정 뉴런에 의존하지 않는 튼튼한 표현을 배우게 하는 정규화 기법이다.
+  sections:
+    - heading: "방법"
+      body: >-
+        각 학습 단계에서 층의 출력 중 일부를 확률 p(예: 0.1~0.5)로 지운다. 남은 출력은 1/(1−p)배로 키워 기대값을 유지한다(inverted dropout). 추론 때는 아무것도 지우지 않는다.
+        매 단계 다른 부분망을 학습하는 셈이라, 수많은 부분망을 앙상블하는 효과로 해석된다.
+    - heading: "그 밖의 과적합 방지"
+      body: >-
+        가중치 감쇠(L2), 조기 종료, 데이터 증강(이미지 회전·잡음 추가 등), 라벨 스무딩, 모델 크기 줄이기가 함께 쓰인다. 데이터가 많아지면 과적합 자체가 줄어들어, 아주 큰 LLM 사전학습에서는
+        드롭아웃을 끄는 경우도 많다.
+    - heading: "MC 드롭아웃"
+      body: >-
+        추론 때도 드롭아웃을 켜고 같은 입력으로 여러 번 예측하면 결과가 조금씩 달라진다. 이 분산을 예측 불확실성의 근사로 쓰는 것이 MC 드롭아웃이다. 별도 모델 없이 불확실성을 얻을 수 있지만,
+        잘 보정된 불확실성인지는 따로 확인해야 한다.
+  formula: |
+    학습: h̃ = (m ⊙ h) / (1 − p),  m_i ~ Bernoulli(1 − p)
+    추론: h̃ = h
+  example: >-
+    수명 예측 신경망에 MC 드롭아웃을 써서 같은 셀을 50번 예측하면 평균과 표준편차를 얻을 수 있고, 표준편차가 큰 셀은 추가 측정 대상으로 고를 수 있다.
+  misconception: >-
+    드롭아웃 비율이 클수록 과적합이 더 줄어 좋다고 생각하기 쉽지만, 너무 크면 모델이 충분히 학습하지 못해 과소적합한다.
+  connection: >-
+    배터리 데이터는 적어서 과적합이 쉽다. 드롭아웃과 조기 종료, 물리적으로 그럴듯한 데이터 증강(측정 잡음 추가 등)을 함께 쓰는 것이 일반적이다.
+  quiz:
+    question: "추론 시 드롭아웃을 켜고 여러 번 예측해 불확실성을 추정하는 방법은?"
+    choices: ["배치 정규화", "MC 드롭아웃", "조기 종료", "라벨 스무딩"]
+    answer_index: 1
+    explanation: "MC 드롭아웃은 추론 때도 무작위로 뉴런을 꺼서 여러 예측의 분산을 불확실성으로 쓴다."
+  keywords:
+    - {ko: "드롭아웃", en: "dropout"}
+    - {ko: "데이터 증강", en: "data augmentation"}
+    - {ko: "MC 드롭아웃", en: "Monte Carlo dropout"}
+  next_topics: ["편향-분산 트레이드오프", "능동 학습(active learning)"]
+  references: ["N. Srivastava et al., Dropout: a simple way to prevent neural networks from overfitting, JMLR, 2014", "Y. Gal, Z. Ghahramani, Dropout as a Bayesian approximation, ICML, 2016"]
+
+- concept: "합성곱 신경망(CNN)"
+  title: "CNN: 같은 필터로 이미지 전체를 훑는다"
+  level: 입문
+  one_liner: >-
+    CNN은 작은 필터를 입력 위로 밀며 국소 패턴을 찾는 합성곱 층을 쌓아, 적은 파라미터로 위치에 상관없이 같은 특징을 인식한다.
+  sections:
+    - heading: "합성곱 층"
+      body: >-
+        3×3 같은 작은 필터가 이미지의 모든 위치에서 같은 가중치로 내적을 계산한다. 가중치 공유 덕분에 파라미터 수가 크게 줄고, 패턴이 어디에 있든 같은 방식으로 감지한다(이동 등변성).
+        필터 여러 개가 각각 가장자리, 질감 같은 다른 특징을 뽑아 특징 맵을 만든다.
+    - heading: "깊어질수록 넓게 본다"
+      body: >-
+        층을 쌓고 풀링이나 보폭(stride)으로 크기를 줄이면, 위층 뉴런 하나가 보는 입력 영역(수용 영역)이 넓어진다. 아래층은 가장자리, 중간층은 모양, 위층은 물체처럼 점점 추상적인 특징을 배운다.
+        ResNet, U-Net 같은 구조가 이 원리를 확장한 것이다.
+    - heading: "이미지 밖의 쓰임"
+      body: >-
+        1차원 CNN은 스펙트럼이나 시계열(전압 곡선)에서 국소 패턴을 찾는 데 쓰이고, 3차원 CNN은 CT 같은 부피 데이터에 쓰인다. U-Net은 인코더로 줄였다가 디코더로 키우며 같은 크기의 층을 이어 붙여,
+        픽셀 단위 분할에 강하다.
+  formula: |
+    (I * K)(i, j) = Σ_m Σ_n I(i+m, j+n) · K(m, n)
+    출력 크기 = ⌊(N + 2P − F) / S⌋ + 1   (N: 입력, F: 필터, P: 패딩, S: 보폭)
+  example: >-
+    전극 단면 SEM 이미지를 U-Net으로 분할해 활물질, 도전재·바인더, 기공을 픽셀 단위로 나누면, 기공률과 입자 크기 분포를 수백 장에서 자동으로 계산할 수 있다.
+  misconception: >-
+    CNN이 회전이나 크기 변화에도 자동으로 강하다고 생각하기 쉽지만, 합성곱은 이동에만 등변성이 있다. 회전·크기 변화에는 데이터 증강이나 특별한 구조가 필요하다.
+  connection: >-
+    현미경 이미지 분할, XRD·라만 스펙트럼 분류, 전압 곡선 기반 수명 예측 등 배터리 데이터 분석에서 CNN은 가장 널리 쓰이는 딥러닝 구조다.
+  quiz:
+    question: "CNN이 완전 연결 층보다 파라미터가 훨씬 적은 주된 이유는?"
+    choices: ["활성화 함수가 없어서", "같은 필터 가중치를 모든 위치에서 공유해서", "입력을 버려서", "층이 하나뿐이라서"]
+    answer_index: 1
+    explanation: "작은 필터를 모든 위치에 같은 가중치로 적용하므로 입력 크기와 무관하게 파라미터 수가 작다."
+  keywords:
+    - {ko: "합성곱 신경망", en: "convolutional neural network"}
+    - {ko: "수용 영역", en: "receptive field"}
+    - {ko: "U-Net", en: "U-Net"}
+  next_topics: ["잔차 연결(ResNet)", "SEM·TEM 단면 분석", "전이 학습과 파인튜닝"]
+  references: ["Y. LeCun, L. Bottou, Y. Bengio, P. Haffner, Gradient-based learning applied to document recognition, Proc. IEEE, 1998", "O. Ronneberger, P. Fischer, T. Brox, U-Net: convolutional networks for biomedical image segmentation, MICCAI, 2015"]
+
+- concept: "RNN과 LSTM"
+  title: "RNN과 LSTM: 순서가 있는 데이터를 기억하며 읽는다"
+  level: 중급
+  one_liner: >-
+    RNN은 이전 단계의 은닉 상태를 다음 단계로 넘기며 시계열을 처리하고, LSTM은 게이트로 정보를 선택적으로 저장·삭제해 긴 시간 의존성을 학습한다.
+  sections:
+    - heading: "RNN"
+      body: >-
+        각 시점의 입력과 이전 은닉 상태를 같은 가중치로 결합해 새 은닉 상태를 만든다. 시간에 따라 같은 계산을 반복하므로 길이가 다른 시퀀스를 다룰 수 있다. 하지만 시간을 거슬러 역전파할 때
+        같은 가중치가 반복해 곱해져 기울기가 소실되거나 폭발하기 쉬워, 먼 과거 정보를 학습하기 어렵다.
+    - heading: "LSTM"
+      body: >-
+        LSTM은 셀 상태라는 별도의 기억 통로를 두고, 망각 게이트(무엇을 지울지), 입력 게이트(무엇을 쓸지), 출력 게이트(무엇을 내보낼지)로 정보를 조절한다. 셀 상태는 덧셈으로 갱신되어
+        기울기가 오래 유지된다. GRU는 게이트를 두 개로 줄인 간단한 변형이다.
+    - heading: "지금의 위치"
+      body: >-
+        긴 시퀀스와 대규모 데이터에서는 병렬 계산이 가능한 트랜스포머가 RNN을 많이 대체했다. 하지만 입력이 한 단계씩 들어오는 실시간 추정(BMS), 작은 데이터, 계산 자원이 제한된 장치에서는
+        LSTM·GRU가 여전히 실용적이다. 최근에는 상태 공간 모델(SSM)처럼 RNN의 효율과 긴 기억을 함께 노리는 구조도 연구된다.
+  formula: |
+    RNN: h_t = tanh(W_x x_t + W_h h_{t−1} + b)
+    LSTM: f_t = σ(·), i_t = σ(·), o_t = σ(·)
+          c_t = f_t ⊙ c_{t−1} + i_t ⊙ tanh(·),  h_t = o_t ⊙ tanh(c_t)
+  example: >-
+    차량 주행 중 전류·전압·온도를 1초 간격으로 넣어 SOC를 추정하는 LSTM은, 이전 시점까지의 정보를 은닉 상태에 담아 매 시점 바로 출력을 낼 수 있어 실시간 추정에 적합하다.
+  misconception: >-
+    LSTM은 무한히 긴 과거를 기억한다고 생각하기 쉽지만, 실제로는 수백 단계 이상의 의존성은 여전히 학습이 어렵다.
+  connection: >-
+    SOC·SOH 추정, 남은 수명 예측 등 배터리 시계열 문제에서 LSTM은 가장 많이 연구된 딥러닝 구조 중 하나다. 물리 모델(등가회로)과 결합한 하이브리드 형태도 많다.
+  quiz:
+    question: "LSTM에서 이전 셀 상태 중 무엇을 지울지 정하는 게이트는?"
+    choices: ["입력 게이트", "망각 게이트", "출력 게이트", "리셋 게이트"]
+    answer_index: 1
+    explanation: "망각 게이트 f_t가 이전 셀 상태 c_{t−1}에 곱해져 얼마나 유지·삭제할지 정한다."
+  keywords:
+    - {ko: "순환 신경망", en: "recurrent neural network"}
+    - {ko: "장단기 메모리", en: "long short-term memory"}
+    - {ko: "시간 역전파", en: "backpropagation through time"}
+  next_topics: ["어텐션 메커니즘", "올리빈 구조 LFP 양극재"]
+  references: ["S. Hochreiter, J. Schmidhuber, Long short-term memory, Neural Computation, 1997"]
+
+- concept: "어텐션 메커니즘"
+  title: "어텐션: 지금 필요한 정보에 가중치를 몰아준다"
+  level: 중급
+  one_liner: >-
+    어텐션은 질의(query)와 각 위치의 키(key)를 비교해 가중치를 정하고, 그 가중치로 값(value)을 평균해, 입력의 어느 부분을 볼지 데이터에 따라 정하는 연산이다.
+  sections:
+    - heading: "등장 배경"
+      body: >-
+        초기 신경 기계 번역은 RNN 인코더가 문장 전체를 고정 길이 벡터 하나에 담고 디코더가 이를 풀어 번역했다. 긴 문장일수록 정보가 병목에 막혔다. 어텐션은 디코더가 단어를 만들 때마다
+        인코더의 모든 위치를 다시 보고 관련 있는 곳에 가중치를 주게 해 이 문제를 풀었다.
+    - heading: "질의·키·값"
+      body: >-
+        각 위치는 질의, 키, 값 벡터를 가진다. 질의와 키의 내적이 '얼마나 관련 있는가'를 나타내고, 소프트맥스로 합이 1인 가중치가 된다. 이 가중치로 값들을 평균한 것이 출력이다.
+        내적이 차원에 따라 커지는 것을 막으려 √d로 나누는 것이 스케일드 닷 프로덕트 어텐션이다.
+    - heading: "셀프 어텐션과 멀티헤드"
+      body: >-
+        질의·키·값이 모두 같은 시퀀스에서 나오면 셀프 어텐션이다. 각 위치가 시퀀스의 모든 위치와 직접 연결되어 먼 거리 관계도 한 단계에 볼 수 있다. 여러 개의 헤드가 서로 다른 투영으로
+        어텐션을 병렬 계산하면, 각 헤드가 다른 종류의 관계를 잡을 수 있다. 계산량은 시퀀스 길이 n의 제곱에 비례한다.
+  formula: |
+    Attention(Q, K, V) = softmax(Q·Kᵀ / √d_k) · V
+    MultiHead = Concat(head_1, ..., head_h) · W_O
+  example: >-
+    사이클 데이터 시퀀스에 어텐션 모델을 쓰고 가중치를 시각화하면, 수명 예측에 특정 초기 사이클 구간이 많이 쓰이는 것처럼 보이는 결과를 얻을 수 있다.
+  misconception: >-
+    어텐션 가중치가 곧 모델 판단의 '설명'이라고 보기 쉽지만, 어텐션 가중치와 실제 중요도가 일치하지 않는다는 연구도 많아 해석에 주의해야 한다.
+  connection: >-
+    전압·전류·온도 같은 여러 센서 신호나 여러 셀의 데이터를 함께 다룰 때, 어텐션은 어떤 신호와 시점이 서로 관련 있는지를 데이터에서 직접 배우게 한다.
+  quiz:
+    question: "스케일드 닷 프로덕트 어텐션에서 √d_k로 나누는 이유는?"
+    choices: ["계산을 빠르게 하려고", "차원이 커질수록 내적이 커져 소프트맥스가 포화되는 것을 막으려고", "음수를 없애려고", "메모리를 줄이려고"]
+    answer_index: 1
+    explanation: "내적 값이 크면 소프트맥스가 한쪽으로 쏠려 기울기가 작아지므로 √d_k로 나눠 크기를 맞춘다."
+  keywords:
+    - {ko: "어텐션", en: "attention"}
+    - {ko: "셀프 어텐션", en: "self-attention"}
+    - {ko: "멀티헤드 어텐션", en: "multi-head attention"}
+  next_topics: ["트랜스포머 구조", "컨텍스트 윈도와 KV 캐시"]
+  references: ["D. Bahdanau, K. Cho, Y. Bengio, Neural machine translation by jointly learning to align and translate, ICLR, 2015"]
+
+- concept: "트랜스포머 구조"
+  title: "트랜스포머: 어텐션만으로 쌓은 현대 AI의 뼈대"
+  level: 중급
+  one_liner: >-
+    트랜스포머는 셀프 어텐션과 위치별 피드포워드 층을 잔차 연결·정규화와 함께 반복해 쌓은 구조로, 순환 없이 병렬 학습이 가능해 LLM을 비롯한 현대 AI의 표준이 되었다.
+  sections:
+    - heading: "블록 구성"
+      body: >-
+        블록 하나는 (1) 멀티헤드 셀프 어텐션, (2) 위치마다 같은 2층 피드포워드 망(MLP)으로 이뤄진다. 각 부분은 잔차 연결로 입력을 더하고 레이어 정규화를 거친다. 이 블록을 수십~수백 번 쌓는다.
+        어텐션은 위치 사이 정보를 섞고, MLP는 각 위치의 표현을 변환하며 지식을 저장하는 역할을 한다고 해석된다.
+    - heading: "위치 정보"
+      body: >-
+        어텐션 자체는 순서를 모른다. 그래서 입력에 위치 정보를 더해야 한다. 원 논문은 사인·코사인 위치 인코딩을 썼고, 최근 LLM은 질의·키를 위치에 따라 회전시키는 RoPE를 많이 쓴다.
+    - heading: "세 가지 형태"
+      body: >-
+        인코더만 쓰는 형태(BERT 계열)는 문장 이해·분류에, 디코더만 쓰는 형태(GPT 계열)는 앞 토큰만 보는 인과 마스크로 다음 토큰을 생성하는 데, 인코더-디코더 형태(T5, 원래 번역 모델)는
+        입력을 출력으로 바꾸는 데 쓴다. 이미지(ViT), 단백질, 분자, 시계열에도 같은 구조가 쓰인다.
+  formula: |
+    블록(Pre-LN): x ← x + MHA(LN(x));  x ← x + MLP(LN(x))
+    인과 마스크: j > i 위치의 어텐션 점수 = −∞
+  example: >-
+    분자를 SMILES 문자열이나 원자 그래프로 나타내 트랜스포머로 학습하면, 전해질 용매의 물성(점도, 산화 전위 등)을 예측하는 모델을 만들 수 있다.
+  misconception: >-
+    트랜스포머가 시퀀스 길이에 상관없이 효율적이라고 생각하기 쉽지만, 어텐션 계산량과 메모리는 길이의 제곱으로 늘어난다. 긴 입력을 위한 효율화 기법이 따로 필요하다.
+  connection: >-
+    배터리 연구에서는 문헌에서 소재 정보를 추출하는 언어 모델, 소재 구조를 다루는 그래프 트랜스포머, 사이클 데이터를 다루는 시계열 트랜스포머로 활용된다.
+  quiz:
+    question: "GPT 같은 디코더 전용 트랜스포머가 미래 토큰을 보지 못하게 하는 장치는?"
+    choices: ["드롭아웃", "인과(causal) 마스크", "배치 정규화", "위치 인코딩"]
+    answer_index: 1
+    explanation: "인과 마스크가 현재 위치보다 뒤 위치의 어텐션 점수를 −∞로 만들어 앞 토큰만 보게 한다."
+  keywords:
+    - {ko: "트랜스포머", en: "transformer"}
+    - {ko: "위치 인코딩", en: "positional encoding"}
+    - {ko: "인과 마스크", en: "causal mask"}
+  next_topics: ["다음 토큰 예측과 사전학습", "어텐션 메커니즘", "잔차 연결(ResNet)"]
+  references: ["A. Vaswani et al., Attention is all you need, NeurIPS, 2017"]
+
+- concept: "잔차 연결(ResNet)"
+  title: "잔차 연결: 입력을 그대로 더해 아주 깊은 망을 학습시킨다"
+  level: 입문
+  one_liner: >-
+    잔차 연결은 층의 출력에 입력을 그대로 더하는 지름길을 만들어, 층이 '바꿀 부분'만 배우게 하고 기울기가 깊은 망을 따라 잘 흐르게 한다.
+  sections:
+    - heading: "깊을수록 나빠지는 문제"
+      body: >-
+        2015년 무렵 층을 많이 쌓은 망이 오히려 얕은 망보다 학습 오차까지 커지는 현상이 관찰되었다. 과적합이 아니라 최적화 자체가 어려워진 것이다. 이론적으로는 추가 층이 항등 함수만 배워도
+        얕은 망만큼은 되어야 하지만, 실제로는 그 항등 함수조차 배우기 어려웠다.
+    - heading: "잔차 학습"
+      body: >-
+        ResNet은 블록의 출력을 y = x + F(x)로 만든다. 층은 전체 변환 대신 입력에서 바꿀 차이(잔차) F(x)만 배우면 되고, 아무것도 안 하는 것이 최적이면 F를 0으로 만들면 된다.
+        역전파 때도 덧셈 경로로 기울기가 그대로 전달되어 100층 이상의 망도 학습할 수 있게 되었다.
+    - heading: "어디에나 쓰인다"
+      body: >-
+        잔차 연결은 이제 거의 모든 깊은 구조의 기본 요소다. 트랜스포머 블록도 어텐션과 MLP 각각에 잔차 연결을 둔다. 확산 모델의 U-Net, 그래프 신경망에도 쓰인다.
+        잔차 연결된 망은 여러 깊이의 얕은 망을 합친 앙상블처럼 행동한다는 해석도 있다.
+  formula: |
+    y = x + F(x; W)
+    ∂L/∂x = ∂L/∂y · (1 + ∂F/∂x)   → '1' 경로로 기울기 보존
+  example: >-
+    전극 이미지 분할이나 XRD 패턴 분류에 사전학습된 ResNet을 가져와 파인튜닝하는 것은 데이터가 적은 배터리 이미지 분석에서 흔한 출발점이다.
+  misconception: >-
+    잔차 연결이 과적합을 막아서 깊은 망이 잘 된다고 생각하기 쉽지만, 핵심은 최적화(기울기 흐름)를 쉽게 만드는 것이다.
+  connection: >-
+    물리 모델의 예측에 신경망이 보정값만 더하는 하이브리드 모델(물리 모델 + 신경망 잔차)은 잔차 학습과 같은 발상이다. 배터리 열화 모델에서 자주 쓰인다.
+  quiz:
+    question: "잔차 블록 y = x + F(x)에서 층 F가 배우는 것은?"
+    choices: ["전체 변환", "입력에서 바꿀 차이(잔차)", "입력의 평균", "정답 레이블"]
+    answer_index: 1
+    explanation: "입력은 지름길로 그대로 더해지므로 층은 필요한 변화량만 배우면 된다."
+  keywords:
+    - {ko: "잔차 연결", en: "residual connection"}
+    - {ko: "지름길 연결", en: "skip connection"}
+    - {ko: "항등 사상", en: "identity mapping"}
+  next_topics: ["합성곱 신경망(CNN)", "트랜스포머 구조", "물리 정보 신경망(PINN)"]
+  references: ["K. He, X. Zhang, S. Ren, J. Sun, Deep residual learning for image recognition, CVPR, 2016"]
+
+- concept: "그래프 신경망(GNN)과 분자·결정 구조"
+  title: "GNN: 원자를 점, 결합을 선으로 보고 배운다"
+  level: 심화
+  one_liner: >-
+    그래프 신경망은 이웃 노드끼리 메시지를 주고받으며 표현을 갱신해, 원자와 결합으로 이뤄진 분자·결정 구조에서 물성을 직접 예측한다.
+  sections:
+    - heading: "메시지 전달"
+      body: >-
+        각 노드(원자)는 특징 벡터(원소 종류 등)를 가진다. 한 층마다 각 노드가 이웃 노드와 연결선(결합 거리 등) 정보로 메시지를 모아 자기 표현을 갱신한다. 층을 k번 쌓으면 k단계 떨어진
+        원자의 정보까지 반영된다. 마지막에 모든 노드 표현을 합쳐(readout) 분자·결정 전체의 성질을 예측한다.
+    - heading: "왜 그래프인가"
+      body: >-
+        분자와 결정은 원자 번호를 매기는 순서에 따라 결과가 바뀌면 안 된다. GNN은 이웃 정보를 합(또는 평균)으로 모아 순서 바꿈에 불변이다. 결정은 주기 경계 조건을 반영해 단위 격자 밖 이웃까지
+        연결선으로 잇는다(CGCNN 등). 회전·이동에 맞게 바뀌는 등변(equivariant) GNN은 힘과 같은 벡터량을 더 정확히 예측한다.
+    - heading: "활용과 한계"
+      body: >-
+        형성 에너지, 띠 간격, 전압, 이온 전도도 예측과 기계학습 원자간 퍼텐셜에 쓰인다. 대규모 계산 데이터베이스로 학습한 범용 퍼텐셜도 나와 있다. 하지만 학습 데이터(주로 DFT)의 오차를 물려받고,
+        학습 범위 밖 구조에서는 신뢰도가 떨어진다. 깊게 쌓으면 노드 표현이 비슷해지는 과평활화 문제도 있다.
+  formula: |
+    m_v = Σ_{u∈N(v)} M(h_v, h_u, e_uv)
+    h_v ← U(h_v, m_v),   y = R({h_v})
+  example: >-
+    고체 전해질 후보 수만 개를 DFT로 모두 계산하는 대신, 계산된 수천 개로 GNN을 학습해 나머지의 안정성과 이동 장벽을 예측하고 유망한 후보만 정밀 계산하는 방식이 쓰인다.
+  misconception: >-
+    GNN이 물리를 이해한다고 생각하기 쉽지만, 학습 데이터의 패턴을 맞추는 것이다. 정확도는 학습 데이터와 비슷한 구조에서만 보장된다.
+  connection: >-
+    양극·고체 전해질 소재 탐색, 전해질 분자 물성 예측, 계면 시뮬레이션용 기계학습 퍼텐셜 등 배터리 소재 연구에서 GNN은 핵심 도구가 되었다.
+  quiz:
+    question: "GNN이 원자 번호 매기는 순서에 영향을 받지 않는 이유는?"
+    choices: ["원자를 항상 정렬해서", "이웃 메시지를 합·평균처럼 순서 무관한 연산으로 모아서", "원자 하나만 봐서", "CNN을 써서"]
+    answer_index: 1
+    explanation: "합·평균·최댓값처럼 순서와 무관한 집계를 써서 노드 순서를 바꿔도 결과가 같다(순열 불변)."
+  keywords:
+    - {ko: "그래프 신경망", en: "graph neural network"}
+    - {ko: "메시지 전달", en: "message passing"}
+    - {ko: "기계학습 원자간 퍼텐셜", en: "machine-learned interatomic potential"}
+  next_topics: ["황화물·산화물 고체 전해질", "능동 학습(active learning)"]
+  references: ["T. Xie, J. C. Grossman, Crystal graph convolutional neural networks for an accurate and interpretable prediction of material properties, Phys. Rev. Lett., 2018", "J. Gilmer et al., Neural message passing for quantum chemistry, ICML, 2017"]
+
+- concept: "오토인코더와 VAE"
+  title: "오토인코더와 VAE: 압축했다가 다시 펼치며 데이터의 핵심을 배운다"
+  level: 중급
+  one_liner: >-
+    오토인코더는 입력을 작은 잠재 벡터로 압축했다가 복원하도록 학습해 데이터의 핵심 구조를 배우고, VAE는 잠재 공간을 확률 분포로 만들어 새 데이터를 생성할 수 있게 한다.
+  sections:
+    - heading: "오토인코더"
+      body: >-
+        인코더가 입력 x를 저차원 잠재 벡터 z로 줄이고, 디코더가 z에서 x를 복원한다. 복원 오차를 줄이도록 학습하면 z에는 데이터의 중요한 변화만 남는다. 선형 오토인코더는 PCA와 같은 공간을 배우고,
+        비선형 오토인코더는 곡선 구조까지 잡는다. 정상 데이터로만 학습하면 이상 데이터는 복원 오차가 커서 이상 탐지에 쓸 수 있다.
+    - heading: "VAE"
+      body: >-
+        변분 오토인코더(VAE)는 인코더가 z 하나가 아니라 평균과 분산(분포)을 낸다. 학습 손실은 복원 오차에 더해, 이 분포가 표준정규분포에서 너무 멀어지지 않게 하는 KL 발산 항을 가진다.
+        그 결과 잠재 공간이 연속적이고 매끄러워져, 표준정규분포에서 z를 뽑아 디코더에 넣으면 새로운 그럴듯한 데이터가 나온다.
+    - heading: "재매개변수화"
+      body: >-
+        분포에서 무작위로 뽑는 과정은 그대로는 미분할 수 없다. z = μ + σ·ε(ε는 표준정규 잡음)로 바꿔 쓰면 무작위성은 ε에 있고 μ, σ로는 기울기가 흐른다. 이것이 재매개변수화 기법이다.
+        VAE의 생성 결과는 흐릿해지기 쉬워, 이미지 생성에서는 확산 모델 등에 많이 자리를 내주었다.
+  formula: |
+    VAE 손실: L = E_q[−log p(x|z)] + KL(q(z|x) ‖ N(0, I))
+    재매개변수화: z = μ + σ ⊙ ε,  ε ~ N(0, I)
+  example: >-
+    분자 SMILES나 그래프를 VAE로 연속 잠재 공간에 넣은 뒤, 그 공간에서 물성 예측 모델과 베이지안 최적화로 좋은 지점을 찾아 디코딩하면 새로운 분자 후보를 생성할 수 있다.
+  misconception: >-
+    오토인코더의 잠재 차원 하나하나가 해석 가능한 물리 변수에 대응한다고 기대하기 쉽지만, 보통은 여러 요인이 섞여 있다. 해석 가능한 표현을 얻으려면 추가 제약이 필요하다.
+  connection: >-
+    정상 셀의 충방전 곡선으로 오토인코더를 학습해 복원 오차로 이상 셀을 찾거나, 전해질 분자 생성에 VAE를 쓰는 연구가 있다.
+  quiz:
+    question: "VAE 손실의 KL 발산 항이 하는 역할은?"
+    choices: ["복원 오차를 키운다", "잠재 분포를 표준정규분포에 가깝게 해 매끄러운 잠재 공간을 만든다", "학습률을 정한다", "데이터를 늘린다"]
+    answer_index: 1
+    explanation: "KL 항이 잠재 분포를 N(0, I) 쪽으로 당겨, 잠재 공간에서 샘플링해 새 데이터를 생성할 수 있게 한다."
+  keywords:
+    - {ko: "오토인코더", en: "autoencoder"}
+    - {ko: "변분 오토인코더", en: "variational autoencoder"}
+    - {ko: "잠재 공간", en: "latent space"}
+  next_topics: ["확산 모델", "주성분 분석(PCA)", "불균형 데이터 다루기"]
+  references: ["D. P. Kingma, M. Welling, Auto-encoding variational Bayes, ICLR, 2014", "R. Gómez-Bombarelli et al., Automatic chemical design using a data-driven continuous representation of molecules, ACS Central Science, 2018"]
+
+- concept: "확산 모델"
+  title: "확산 모델: 잡음을 조금씩 걷어 내며 데이터를 만든다"
+  level: 심화
+  one_liner: >-
+    확산 모델은 데이터에 잡음을 단계적으로 더하는 과정을 거꾸로 되돌리도록 신경망을 학습해, 순수한 잡음에서 시작해 점점 그럴듯한 데이터를 생성한다.
+  sections:
+    - heading: "정방향 과정"
+      body: >-
+        깨끗한 데이터 x₀에 아주 작은 가우시안 잡음을 수백~수천 단계에 걸쳐 조금씩 더하면, 마지막에는 순수한 잡음과 구별할 수 없게 된다. 이 과정은 학습할 것이 없는 고정된 과정이며,
+        임의의 단계 t의 잡음 섞인 데이터 x_t를 한 번에 계산할 수 있다.
+    - heading: "역방향 과정과 학습"
+      body: >-
+        신경망은 x_t와 단계 t를 받아 '여기에 섞인 잡음이 무엇인지'를 예측하도록 학습한다. 손실은 실제 더한 잡음과 예측한 잡음의 제곱 오차로 매우 단순하다. 생성할 때는 순수한 잡음에서 시작해
+        예측한 잡음을 조금씩 빼는 과정을 반복한다. 이는 데이터 분포의 로그 밀도 기울기(점수)를 따라가는 것으로 해석된다.
+    - heading: "특징과 확장"
+      body: >-
+        GAN보다 학습이 안정적이고 다양한 샘플을 만든다. 대신 생성에 여러 단계가 필요해 느리며, 이를 줄이는 빠른 샘플러와 증류 방법이 연구된다. 텍스트·조건을 넣어 원하는 결과를 유도할 수 있고,
+        이미지뿐 아니라 분자, 단백질, 결정 구조 생성에도 쓰인다.
+  formula: |
+    정방향: x_t = √ᾱ_t · x₀ + √(1 − ᾱ_t) · ε,  ε ~ N(0, I)
+    학습: L = E[‖ε − ε_θ(x_t, t)‖²]
+  example: >-
+    결정 구조 생성 확산 모델은 원자 위치·원소·격자를 함께 잡음에서 복원해, 원하는 물성(예: 안정성, 특정 띠 간격)을 조건으로 새 소재 후보 구조를 제안한다.
+  misconception: >-
+    생성된 소재 구조가 그럴듯하면 실제로 합성 가능하다고 보기 쉽지만, 생성 모델은 학습 분포를 흉내 낼 뿐이다. 안정성 계산과 합성 실험으로 반드시 확인해야 한다.
+  connection: >-
+    새로운 전극·고체 전해질 결정 구조 후보 생성, 전극 미세구조 이미지 생성(데이터 증강) 등 배터리 소재 설계에서 확산 모델이 시도되고 있다.
+  quiz:
+    question: "DDPM 방식 확산 모델의 신경망이 학습 중에 예측하는 것은?"
+    choices: ["원래 레이블", "데이터에 섞인 잡음 ε", "학습률", "다음 토큰"]
+    answer_index: 1
+    explanation: "신경망은 x_t에 섞인 잡음을 예측하고, 생성 시 그 잡음을 단계적으로 빼서 데이터를 복원한다."
+  keywords:
+    - {ko: "확산 모델", en: "diffusion model"}
+    - {ko: "점수 기반 모델", en: "score-based model"}
+    - {ko: "잡음 제거", en: "denoising"}
+  next_topics: ["오토인코더와 VAE", "그래프 신경망(GNN)과 분자·결정 구조"]
+  references: ["J. Ho, A. Jain, P. Abbeel, Denoising diffusion probabilistic models, NeurIPS, 2020"]
+
+- concept: "전이 학습과 파인튜닝"
+  title: "전이 학습: 큰 데이터에서 배운 것을 작은 문제에 옮긴다"
+  level: 입문
+  one_liner: >-
+    전이 학습은 큰 데이터로 미리 학습한 모델의 표현을 가져와 작은 목표 데이터에 맞게 일부 또는 전체를 다시 학습(파인튜닝)해, 적은 데이터로도 좋은 성능을 얻는 방법이다.
+  sections:
+    - heading: "왜 통하나"
+      body: >-
+        큰 데이터로 학습한 모델의 아래층은 가장자리·질감(이미지), 문법·의미(언어)처럼 여러 문제에 공통으로 쓸모 있는 특징을 배운다. 목표 문제의 데이터가 적어도 이 특징을 재사용하면
+        처음부터 학습하는 것보다 훨씬 적은 데이터로 좋은 모델을 만들 수 있다.
+    - heading: "방법들"
+      body: >-
+        (1) 사전학습 모델을 고정하고 마지막 층만 새로 학습(특징 추출), (2) 전체를 작은 학습률로 다시 학습(전체 파인튜닝), (3) 일부 층만 풀어 학습, (4) LoRA처럼 적은 추가 파라미터만 학습하는
+        방법이 있다. 목표 데이터가 적을수록 더 많이 고정하는 편이 안전하다.
+    - heading: "언제 실패하나"
+      body: >-
+        원래 데이터와 목표 데이터가 너무 다르면 효과가 작거나 오히려 나빠질 수 있다(부정적 전이). 파인튜닝 중 원래 능력을 잊어버리는 파국적 망각도 문제다.
+        먼저 '사전학습 모델 + 간단한 분류기'로 기준선을 잡고 비교하는 것이 좋다.
+  formula: |
+    θ_target 초기값 = θ_pretrained
+    min_θ L_target(θ) (작은 학습률, 일부 층 고정 가능)
+  example: >-
+    한 종류 셀(예: NCM/흑연)의 많은 사이클 데이터로 수명 예측 모델을 학습한 뒤, 데이터가 적은 새 셀 화학(예: LFP)에 소량의 데이터로 파인튜닝하면 처음부터 학습하는 것보다 오차가 줄어드는 경우가 보고된다.
+  misconception: >-
+    사전학습 모델이 클수록 무조건 좋다고 생각하기 쉽지만, 목표 데이터와 영역이 맞지 않으면 작은 영역 특화 모델이 더 나을 수 있다.
+  connection: >-
+    배터리는 화학·형태·사용 조건이 다양해 매번 데이터를 새로 모으기 어렵다. 그래서 셀 종류 간, 시뮬레이션→실험 간 전이 학습이 배터리 머신러닝의 중요한 주제다.
+  quiz:
+    question: "목표 데이터가 매우 적을 때 일반적으로 안전한 전략은?"
+    choices: ["모든 층을 큰 학습률로 다시 학습", "사전학습 층 대부분을 고정하고 마지막 층만 학습", "사전학습을 버리고 처음부터 학습", "데이터를 지우기"]
+    answer_index: 1
+    explanation: "데이터가 적으면 전체를 학습할 때 과적합·망각이 쉬워, 대부분을 고정하고 위쪽만 학습하는 편이 안정적이다."
+  keywords:
+    - {ko: "전이 학습", en: "transfer learning"}
+    - {ko: "파인튜닝", en: "fine-tuning"}
+    - {ko: "파국적 망각", en: "catastrophic forgetting"}
+  next_topics: ["LoRA와 파라미터 효율적 파인튜닝", "합성곱 신경망(CNN)"]
+  references: ["J. Yosinski, J. Clune, Y. Bengio, H. Lipson, How transferable are features in deep neural networks?, NeurIPS, 2014"]
+
+- concept: "물리 정보 신경망(PINN)"
+  title: "PINN: 물리 방정식을 손실 함수에 넣은 신경망"
+  level: 심화
+  one_liner: >-
+    PINN은 데이터 오차뿐 아니라 지배 방정식(편미분 방정식)의 잔차를 손실에 더해 학습해, 적은 데이터로도 물리 법칙을 따르는 해를 얻거나 숨은 파라미터를 추정한다.
+  sections:
+    - heading: "아이디어"
+      body: >-
+        신경망 u(x, t; θ)가 해를 표현한다고 두고, 자동 미분으로 ∂u/∂t, ∂²u/∂x² 같은 도함수를 구한다. 이를 지배 방정식에 넣어 나온 잔차를 무작위로 뽑은 점(콜로케이션 점)에서 0이 되도록 학습한다.
+        초기·경계 조건과 측정 데이터에 대한 오차도 함께 손실에 넣는다.
+    - heading: "순문제와 역문제"
+      body: >-
+        방정식과 조건을 알고 해를 구하는 순문제에도 쓸 수 있지만, 기존 수치해법(유한요소, 유한체적)보다 대개 느리고 덜 정확하다. PINN의 강점은 역문제다. 확산 계수 같은 미지 파라미터를
+        학습 변수로 두고 측정 데이터와 방정식을 동시에 만족하도록 학습하면 파라미터를 추정할 수 있다.
+    - heading: "어려움"
+      body: >-
+        여러 손실 항의 크기 균형을 맞추기 어렵고, 해가 급격히 변하거나 여러 시간 척도가 섞인 문제(배터리처럼 경직된 방정식)에서는 학습이 잘 안 되는 경우가 많다. 그래서 손실 가중치 조정,
+        영역 분할, 무차원화가 중요하다. 연산자 자체를 배우는 신경 연산자(DeepONet, FNO)도 대안으로 연구된다.
+  formula: |
+    L = L_data + λ_r · (1/N_r) Σ ‖N[u_θ](x_r, t_r)‖² + λ_b · L_boundary
+    예) 확산: N[u] = ∂u/∂t − D·∂²u/∂x²
+  example: >-
+    단일 입자 모델의 확산 방정식을 PINN에 넣고 측정 전압 데이터를 함께 학습시키면, 입자 내 리튬 농도 분포와 확산 계수를 함께 추정하는 연구가 있다.
+  misconception: >-
+    PINN이 기존 수치 해석을 대체할 것이라고 기대하기 쉽지만, 단순한 순문제는 기존 해법이 더 빠르고 정확한 경우가 많다. PINN은 데이터와 방정식을 섞어야 하는 문제에서 가치가 크다.
+  connection: >-
+    DFN·SPM 같은 전기화학 모델의 파라미터 추정, 셀 내부 온도 분포 추정, 열화 모델 보정 등 배터리 모델링에서 PINN과 하이브리드 물리-데이터 모델이 활발히 연구된다.
+  quiz:
+    question: "PINN의 손실 함수에 데이터 오차 외에 더해지는 것은?"
+    choices: ["가중치 개수", "지배 방정식의 잔차", "학습률", "드롭아웃 비율"]
+    answer_index: 1
+    explanation: "자동 미분으로 구한 도함수를 방정식에 넣은 잔차를 손실에 더해 해가 물리 법칙을 따르게 한다."
+  keywords:
+    - {ko: "물리 정보 신경망", en: "physics-informed neural network"}
+    - {ko: "역문제", en: "inverse problem"}
+    - {ko: "신경 연산자", en: "neural operator"}
+  next_topics: ["뉴먼(Doyle-Fuller-Newman) 모델의 기본 가정", "Fick 확산과 고체 내 확산 계수"]
+  references: ["M. Raissi, P. Perdikaris, G. E. Karniadakis, Physics-informed neural networks, J. Computational Physics, 2019", "G. E. Karniadakis et al., Physics-informed machine learning, Nature Reviews Physics, 2021"]
