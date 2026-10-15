@@ -8,6 +8,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-14-ai-llm.json"
+    },
+    {
+      "date": "2026-10-15",
+      "topic": "ai-deep-learning",
+      "concept": "트랜스포머 구조",
+      "title": "트랜스포머: 어텐션만으로 쌓은 현대 AI의 뼈대",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-15-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503
