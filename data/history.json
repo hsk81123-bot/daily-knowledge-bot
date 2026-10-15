@@ -17,6 +17,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-15-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-10-16",
+      "topic": "battery-electrochemistry",
+      "concept": "Fick 확산과 고체 내 확산 계수",
+      "title": "확산: 리튬이 입자 속을 이동하는 속도",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-16-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503
