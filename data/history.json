@@ -26,6 +26,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-16-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-10-17",
+      "topic": "battery-analysis",
+      "concept": "DRT(완화 시간 분포) 분석",
+      "title": "DRT: 겹친 반원을 시간 상수별로 풀어 헤치기",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-17-battery-analysis.json"
     }
   ],
   "telegram_offset": 814324503
