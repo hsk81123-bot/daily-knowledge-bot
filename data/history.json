@@ -35,6 +35,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-17-battery-analysis.json"
+    },
+    {
+      "date": "2026-10-18",
+      "topic": "battery-materials",
+      "concept": "LiPF6-카보네이트 액체 전해질",
+      "title": "LiPF₆ + 카보네이트: 30년 넘게 쓰인 표준 전해질",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-18-battery-materials.json"
     }
   ],
   "telegram_offset": 814324503

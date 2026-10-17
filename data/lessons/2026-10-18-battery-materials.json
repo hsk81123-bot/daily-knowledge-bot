@@ -1,0 +1,60 @@
+{
+  "concept": "LiPF6-카보네이트 액체 전해질",
+  "concept_en": "Lithium hexafluorophosphate",
+  "title": "LiPF₆ + 카보네이트: 30년 넘게 쓰인 표준 전해질",
+  "level": "입문",
+  "one_liner": "상용 리튬이온 전지 전해질은 LiPF₆ 염을 고리형(EC)과 선형(DMC, EMC 등) 카보네이트 혼합 용매에 녹인 것이 기본이다.",
+  "sections": [
+    {
+      "heading": "용매 조합",
+      "body": "에틸렌 카보네이트(EC)는 유전율이 높아 염을 잘 해리시키고, 흑연 위에 안정한 SEI를 만드는 핵심 성분이다. 하지만 상온에서 고체이고 점도가 높다. 그래서 점도가 낮은 선형 카보네이트(DMC, EMC, DEC)를 섞어 이온이 잘 움직이게 한다. 프로필렌 카보네이트(PC)만 쓰면 흑연 층 사이로 용매가 함께 들어가 흑연이 벗겨지는 문제가 있다."
+    },
+    {
+      "heading": "왜 LiPF₆인가",
+      "body": "LiPF₆는 전도도, 전기화학 안정성, 알루미늄 집전체 부식 억제(표면에 AlF₃ 보호막 형성)의 균형이 좋다. 단점은 열과 수분에 약하다는 것이다. LiPF₆ ⇌ LiF + PF₅로 분해되고, PF₅와 미량의 물이 반응하면 HF가 생겨 양극을 공격하고 전이금속 용출을 일으킨다."
+    },
+    {
+      "heading": "일반적인 사양",
+      "body": "보통 1.0~1.2 M 농도에서 상온 전도도가 대략 10 mS/cm 수준이다. 여기에 VC, FEC 같은 첨가제를 몇 % 넣어 SEI를 조절한다. 카보네이트 용매는 인화성이 있어 열폭주 시 화재의 원인이 되므로, 난연 첨가제나 불연성 용매가 연구된다."
+    }
+  ],
+  "formula": "LiPF6 ⇌ LiF + PF5\nPF5 + H2O → POF3 + 2HF",
+  "example": "전해질 주입은 이슬점이 매우 낮은 건조실에서 한다. 수분이 수십 ppm만 있어도 HF가 생겨 고온 수명이 나빠지기 때문이다.",
+  "misconception": "전해질 전도도가 높을수록 항상 좋은 것은 아니다. 점도, 전이수, SEI 형성 능력, 전위 안정성을 함께 봐야 하며, 전도도를 위해 EC를 너무 줄이면 SEI가 약해질 수 있다.",
+  "connection": "용매 조합과 염 농도를 바꿔 가며 전도도를 측정하는 실험은 조합 수가 많다. 로봇 실험과 베이지안 최적화를 결합한 자율 실험실이 전해질 조성 최적화에 쓰인 사례가 있다.",
+  "quiz": {
+    "question": "EC를 선형 카보네이트(DMC 등)와 섞어 쓰는 주된 이유는?",
+    "choices": [
+      "EC의 높은 점도를 낮추려고",
+      "EC가 SEI를 못 만들어서",
+      "LiPF₆가 EC에 안 녹아서",
+      "알루미늄 부식을 늘리려고"
+    ],
+    "answer_index": 0,
+    "explanation": "EC는 해리와 SEI 형성에 좋지만 점도가 높고 상온에서 고체라, 저점도 선형 카보네이트를 섞는다."
+  },
+  "keywords": [
+    {
+      "ko": "에틸렌 카보네이트",
+      "en": "ethylene carbonate"
+    },
+    {
+      "ko": "육불화인산리튬",
+      "en": "lithium hexafluorophosphate"
+    },
+    {
+      "ko": "불산",
+      "en": "hydrofluoric acid"
+    }
+  ],
+  "next_topics": [
+    "SEI(고체 전해질 계면)의 형성과 조성",
+    "SEI 형성 첨가제 FEC·VC",
+    "용매화 구조와 고농도·국부고농도 전해질"
+  ],
+  "references": [
+    "K. Xu, Nonaqueous liquid electrolytes for lithium-based rechargeable batteries, Chemical Reviews, 2004"
+  ],
+  "source": "library",
+  "review": false
+}
