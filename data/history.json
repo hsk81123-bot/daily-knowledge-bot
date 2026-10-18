@@ -44,6 +44,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-18-battery-materials.json"
+    },
+    {
+      "date": "2026-10-19",
+      "topic": "battery-electrochemistry",
+      "concept": "OCV, 엔트로피 계수, 가역 발열",
+      "title": "OCV와 엔트로피: 전지가 충전 중에 식기도 하는 이유",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-19-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503
