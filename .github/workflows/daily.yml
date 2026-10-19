@@ -2,8 +2,12 @@ name: Daily knowledge
 
 on:
   schedule:
-    # 매일 07:00 KST에 받기 위해 10분 일찍 예약(GitHub cron은 늦게 시작하는 경우가 많음). cron은 UTC 기준.
-    - cron: "50 21 * * *"
+    # 목표: 매일 05:00 KST 발송. GitHub 예약 실행은 1~2시간씩 늦게 시작하는 일이 잦아서
+    # 02:07, 03:07, 04:07 KST(=UTC 17:07, 18:07, 19:07)에 미리 시작해 05:00까지 기다렸다 보낸다.
+    # 하루 한 번만 보내므로 먼저 도착한 실행만 발송하고 나머지는 건너뛴다.
+    - cron: "7 17 * * *"
+    - cron: "7 18 * * *"
+    - cron: "7 19 * * *"
   workflow_dispatch:
     inputs:
       topic:
@@ -22,16 +26,38 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: knowledge-bot-data   # 명령 폴링과 같은 그룹: data/history.json 동시 수정 방지
-  cancel-in-progress: false
-
 jobs:
+  wait:
+    # 예약 실행이 05:00 KST보다 일찍 시작하면 05:00까지 기다린다(수동 실행은 바로 보냄).
+    # 공개 저장소라 대기 시간에 Actions 사용 요금이 들지 않는다.
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Wait until 05:00 KST
+        if: ${{ github.event_name == 'schedule' }}
+        run: |
+          now=$(date +%s)
+          target=$(TZ=Asia/Seoul date -d "$(TZ=Asia/Seoul date +%F) 05:00" +%s)
+          wait=$(( target - now ))
+          echo "지금 $(TZ=Asia/Seoul date '+%F %H:%M') KST"
+          if [ "$wait" -gt 0 ] && [ "$wait" -lt 14400 ]; then
+            echo "05:00 KST까지 ${wait}초 기다립니다."
+            sleep "$wait"
+          else
+            echo "이미 05:00 KST가 지났습니다. 바로 보냅니다."
+          fi
+
   send:
+    needs: wait
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    concurrency:
+      group: knowledge-bot-data   # 명령 폴링과 같은 그룹: data/history.json 동시 수정 방지
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}   # 기다리는 동안 다른 실행이 남긴 최신 기록을 받아 중복 발송 방지
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

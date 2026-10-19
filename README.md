@@ -135,8 +135,10 @@ tests/                      pytest(네트워크는 전부 모킹)
 - `topic`에 `계면`, `LLM` 같은 이름을 넣으면 그 주제로 보냅니다.
 - 실패하면 로그를 Claude에게 보여 주세요.
 
-이후에는 **매일 07:00 KST** 무렵에 자동으로 옵니다. GitHub의 예약 실행은 몇 분~수십 분 늦게 시작하는 경우가 많아 06:50 KST(`50 21 * * *` UTC)로 예약해 두었습니다.
-시간을 바꾸려면 `.github/workflows/daily.yml`의 cron을 고치세요(UTC = KST − 9시간).
+이후에는 **매일 05:00 KST**에 자동으로 옵니다. GitHub의 예약 실행은 1~2시간씩 늦게 시작하는 일이 잦아서(실제로 07:00 예약이 08:30~09:00에 도착),
+02:07·03:07·04:07 KST에 미리 시작해 **05:00까지 기다렸다가** 보냅니다. 세 번 중 먼저 도착한 실행만 보내고 나머지는 건너뜁니다
+(Actions 탭에 건너뛰거나 취소된 실행이 보여도 정상). 세 번 모두 05:00 이후에 시작되면 그때 바로 보냅니다.
+시간을 바꾸려면 `.github/workflows/daily.yml`에서 cron 세 줄(UTC = KST − 9시간)과 `Wait until` 단계의 `05:00`을 함께 고치세요.
 
 ## 봇 명령
 
@@ -199,7 +201,7 @@ python -m pytest -q                          # 테스트
 서버 cron 예시(서버 시간대가 KST일 때). 서버에서 돌릴 때는 GitHub Actions의 schedule을 꺼서 두 번 보내지 않게 하세요.
 
 ```cron
-0 7 * * *    cd /path/to/daily-knowledge-bot && .venv/bin/python -m knowledge_bot send >> bot.log 2>&1
+0 5 * * *    cd /path/to/daily-knowledge-bot && .venv/bin/python -m knowledge_bot send >> bot.log 2>&1
 */5 * * * *  cd /path/to/daily-knowledge-bot && .venv/bin/python -m knowledge_bot commands >> bot.log 2>&1
 ```
 
