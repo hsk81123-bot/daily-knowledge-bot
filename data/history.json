@@ -53,6 +53,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-19-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-10-20",
+      "topic": "ai-deep-learning",
+      "concept": "오토인코더와 VAE",
+      "title": "오토인코더와 VAE: 압축했다가 다시 펼치며 데이터의 핵심을 배운다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-20-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503
