@@ -62,6 +62,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-20-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-10-21",
+      "topic": "ai-llm",
+      "concept": "환각(hallucination)과 그 원인",
+      "title": "환각: 그럴듯하지만 사실이 아닌 답",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-21-ai-llm.json"
     }
   ],
   "telegram_offset": 814324503
