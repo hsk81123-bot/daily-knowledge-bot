@@ -71,6 +71,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-21-ai-llm.json"
+    },
+    {
+      "date": "2026-10-22",
+      "topic": "battery-analysis",
+      "concept": "DSC·ARC 열안전성 평가",
+      "title": "DSC·ARC: 열폭주가 언제 시작되는지 재기",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-22-battery-analysis.json"
     }
   ],
   "telegram_offset": 814324503
