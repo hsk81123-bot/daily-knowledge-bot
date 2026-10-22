@@ -80,6 +80,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-22-battery-analysis.json"
+    },
+    {
+      "date": "2026-10-23",
+      "topic": "battery-materials",
+      "concept": "올리빈 구조 LFP 양극재",
+      "title": "LFP: 에너지 밀도 대신 안전성과 수명을 택한 양극재",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-23-battery-materials.json"
     }
   ],
   "telegram_offset": 814324503
