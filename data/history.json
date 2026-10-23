@@ -89,6 +89,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-23-battery-materials.json"
+    },
+    {
+      "date": "2026-10-24",
+      "topic": "ai-machine-learning",
+      "concept": "가우시안 프로세스 회귀",
+      "title": "가우시안 프로세스: 예측과 함께 '모르는 정도'를 알려 준다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-24-ai-machine-learning.json"
     }
   ],
   "telegram_offset": 814324503
