@@ -98,6 +98,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-24-ai-machine-learning.json"
+    },
+    {
+      "date": "2026-10-25",
+      "topic": "battery-interface",
+      "concept": "전고체 전지의 계면 접촉 손실(화학-기계적 열화)",
+      "title": "전고체 계면 접촉 손실: 고체는 흘러 들어가지 않는다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-25-battery-interface.json"
     }
   ],
   "telegram_offset": 814324503
