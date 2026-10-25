@@ -107,6 +107,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-25-battery-interface.json"
+    },
+    {
+      "date": "2026-10-26",
+      "topic": "ai-llm",
+      "concept": "RLHF와 DPO",
+      "title": "RLHF와 DPO: 사람이 더 좋아하는 답 쪽으로 모델을 민다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-26-ai-llm.json"
     }
   ],
   "telegram_offset": 814324503
