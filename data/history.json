@@ -116,6 +116,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-26-ai-llm.json"
+    },
+    {
+      "date": "2026-10-27",
+      "topic": "battery-materials",
+      "concept": "분리막의 역할과 셧다운 기능",
+      "title": "분리막: 전자는 막고 이온은 통과시키는 얇은 다공막",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-27-battery-materials.json"
     }
   ],
   "telegram_offset": 814324503
