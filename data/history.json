@@ -125,6 +125,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-27-battery-materials.json"
+    },
+    {
+      "date": "2026-10-28",
+      "topic": "battery-electrochemistry",
+      "concept": "2전극·3전극 셀과 기준 전극",
+      "title": "기준 전극: 셀 전압 속에 숨은 전극 전위 보기",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-28-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503
