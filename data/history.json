@@ -134,6 +134,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-28-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-10-29",
+      "topic": "battery-interface",
+      "concept": "인공 SEI",
+      "title": "인공 SEI: 전지가 만들기 전에 미리 씌우는 보호막",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-29-battery-interface.json"
     }
   ],
   "telegram_offset": 814324503
