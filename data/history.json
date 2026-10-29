@@ -143,6 +143,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-29-battery-interface.json"
+    },
+    {
+      "date": "2026-10-30",
+      "topic": "battery-analysis",
+      "concept": "고체 NMR",
+      "title": "고체 NMR: 리튬 원자의 주변을 직접 듣는다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-30-battery-analysis.json"
     }
   ],
   "telegram_offset": 814324503
