@@ -152,6 +152,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-30-battery-analysis.json"
+    },
+    {
+      "date": "2026-10-31",
+      "topic": "battery-electrochemistry",
+      "concept": "패러데이 법칙과 이론 용량 계산",
+      "title": "패러데이 법칙: 전하량으로 물질량을 센다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-10-31-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503
