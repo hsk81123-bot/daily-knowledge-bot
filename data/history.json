@@ -161,6 +161,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-10-31-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-11-01",
+      "topic": "ai-deep-learning",
+      "concept": "합성곱 신경망(CNN)",
+      "title": "CNN: 같은 필터로 이미지 전체를 훑는다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-01-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503

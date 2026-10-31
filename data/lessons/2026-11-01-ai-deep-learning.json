@@ -1,0 +1,61 @@
+{
+  "concept": "합성곱 신경망(CNN)",
+  "concept_en": "Convolutional neural network",
+  "title": "CNN: 같은 필터로 이미지 전체를 훑는다",
+  "level": "입문",
+  "one_liner": "CNN은 작은 필터를 입력 위로 밀며 국소 패턴을 찾는 합성곱 층을 쌓아, 적은 파라미터로 위치에 상관없이 같은 특징을 인식한다.",
+  "sections": [
+    {
+      "heading": "합성곱 층",
+      "body": "3×3 같은 작은 필터가 이미지의 모든 위치에서 같은 가중치로 내적을 계산한다. 가중치 공유 덕분에 파라미터 수가 크게 줄고, 패턴이 어디에 있든 같은 방식으로 감지한다(이동 등변성). 필터 여러 개가 각각 가장자리, 질감 같은 다른 특징을 뽑아 특징 맵을 만든다."
+    },
+    {
+      "heading": "깊어질수록 넓게 본다",
+      "body": "층을 쌓고 풀링이나 보폭(stride)으로 크기를 줄이면, 위층 뉴런 하나가 보는 입력 영역(수용 영역)이 넓어진다. 아래층은 가장자리, 중간층은 모양, 위층은 물체처럼 점점 추상적인 특징을 배운다. ResNet, U-Net 같은 구조가 이 원리를 확장한 것이다."
+    },
+    {
+      "heading": "이미지 밖의 쓰임",
+      "body": "1차원 CNN은 스펙트럼이나 시계열(전압 곡선)에서 국소 패턴을 찾는 데 쓰이고, 3차원 CNN은 CT 같은 부피 데이터에 쓰인다. U-Net은 인코더로 줄였다가 디코더로 키우며 같은 크기의 층을 이어 붙여, 픽셀 단위 분할에 강하다."
+    }
+  ],
+  "formula": "(I * K)(i, j) = Σ_m Σ_n I(i+m, j+n) · K(m, n)\n출력 크기 = ⌊(N + 2P − F) / S⌋ + 1   (N: 입력, F: 필터, P: 패딩, S: 보폭)",
+  "example": "전극 단면 SEM 이미지를 U-Net으로 분할해 활물질, 도전재·바인더, 기공을 픽셀 단위로 나누면, 기공률과 입자 크기 분포를 수백 장에서 자동으로 계산할 수 있다.",
+  "misconception": "CNN이 회전이나 크기 변화에도 자동으로 강하다고 생각하기 쉽지만, 합성곱은 이동에만 등변성이 있다. 회전·크기 변화에는 데이터 증강이나 특별한 구조가 필요하다.",
+  "connection": "현미경 이미지 분할, XRD·라만 스펙트럼 분류, 전압 곡선 기반 수명 예측 등 배터리 데이터 분석에서 CNN은 가장 널리 쓰이는 딥러닝 구조다.",
+  "quiz": {
+    "question": "CNN이 완전 연결 층보다 파라미터가 훨씬 적은 주된 이유는?",
+    "choices": [
+      "활성화 함수가 없어서",
+      "같은 필터 가중치를 모든 위치에서 공유해서",
+      "입력을 버려서",
+      "층이 하나뿐이라서"
+    ],
+    "answer_index": 1,
+    "explanation": "작은 필터를 모든 위치에 같은 가중치로 적용하므로 입력 크기와 무관하게 파라미터 수가 작다."
+  },
+  "keywords": [
+    {
+      "ko": "합성곱 신경망",
+      "en": "convolutional neural network"
+    },
+    {
+      "ko": "수용 영역",
+      "en": "receptive field"
+    },
+    {
+      "ko": "U-Net",
+      "en": "U-Net"
+    }
+  ],
+  "next_topics": [
+    "잔차 연결(ResNet)",
+    "SEM·TEM 단면 분석",
+    "전이 학습과 파인튜닝"
+  ],
+  "references": [
+    "Y. LeCun, L. Bottou, Y. Bengio, P. Haffner, Gradient-based learning applied to document recognition, Proc. IEEE, 1998",
+    "O. Ronneberger, P. Fischer, T. Brox, U-Net: convolutional networks for biomedical image segmentation, MICCAI, 2015"
+  ],
+  "source": "library",
+  "review": false
+}
