@@ -170,6 +170,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-01-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-11-02",
+      "topic": "ai-llm",
+      "concept": "인스트럭션 튜닝",
+      "title": "인스트럭션 튜닝: 이어 쓰는 모델을 지시를 따르는 모델로",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-02-ai-llm.json"
     }
   ],
   "telegram_offset": 814324503
