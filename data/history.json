@@ -179,6 +179,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-02-ai-llm.json"
+    },
+    {
+      "date": "2026-11-03",
+      "topic": "battery-materials",
+      "concept": "층상 양극재 NCM의 구조와 니켈 함량",
+      "title": "NCM 양극재: 니켈을 늘리면 용량은 오르고 안정성은 내려간다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-03-battery-materials.json"
     }
   ],
   "telegram_offset": 814324503
