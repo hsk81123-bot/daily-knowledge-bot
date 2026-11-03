@@ -1,0 +1,71 @@
+# 지식 그래프 임베딩: 관계를 벡터의 이동으로 배운다
+
+🕸️ AI › 온톨로지 · 2026-11-04 · 심화
+
+> 💡 지식 그래프 임베딩은 개체와 관계를 벡터로 바꾸어, 참인 트리플은 점수가 높고 거짓은 낮도록 학습함으로써 그래프에 빠진 관계를 예측하고 머신러닝 입력으로 쓸 수 있게 한다.
+
+## TransE
+
+TransE는 관계를 '이동'으로 본다. (머리, 관계, 꼬리) 트리플이 참이면 머리 벡터에 관계 벡터를 더한 위치가 꼬리 벡터 근처에 있도록 학습한다(h + r ≈ t). 참인 트리플과 머리나 꼬리를 무작위로 바꾼 가짜 트리플 사이에 여백을 두는 손실로 학습한다. 단순하고 빠르지만 일대다 관계(한 셀이 여러 시험을 가짐)를 잘 표현하지 못한다.
+
+## 발전된 모델
+
+DistMult는 곱셈 기반 점수로 대칭 관계를, ComplEx는 복소수 벡터로 비대칭 관계를, RotatE는 관계를 복소 공간의 회전으로 표현해 대칭·역관계·합성 관계를 함께 다룬다. 그래프 신경망으로 이웃 구조까지 반영하는 R-GCN 같은 방법도 있다.
+
+## 쓰임과 한계
+
+주된 용도는 링크 예측(아직 기록되지 않은 관계 추천)과, 개체 벡터를 다른 머신러닝 모델의 특징으로 쓰는 것이다. 평가는 정답 꼬리가 후보 중 몇 위인지(MRR, Hits@k)로 한다. 하지만 학습에 쓰지 않은 새 개체는 다루기 어렵고, 예측은 확률적 추천일 뿐 사실 확인이 필요하다.
+
+## 🧮 핵심 수식·원리
+
+```
+TransE 점수: f(h, r, t) = −‖h + r − t‖
+손실: Σ max(0, γ + ‖h + r − t‖ − ‖h′ + r − t′‖)
+```
+
+## 🔍 예시·적용
+
+(소재, 효과있음, 첨가제) 관계로 만든 문헌 지식 그래프를 임베딩하면, 아직 함께 시험되지 않은 '소재-첨가제' 조합 중 효과가 있을 가능성이 높은 후보를 순위로 뽑아 실험 우선순위를 정하는 데 참고할 수 있다.
+
+## ⚠️ 흔한 오해
+
+링크 예측 점수가 높으면 그 관계가 사실이라고 보기 쉽지만, 그래프에 있는 패턴과 비슷하다는 뜻일 뿐이다. 특히 문헌 지식 그래프는 출판 편향을 그대로 학습한다.
+
+## 🔗 배터리 × AI
+
+소재·공정·성능을 잇는 배터리 지식 그래프에 임베딩을 적용하면, 그래프 구조를 머신러닝이 쓸 수 있는 벡터로 바꿔 수명 예측이나 소재 추천 모델의 입력으로 쓸 수 있다.
+
+## ❓ 퀴즈
+
+TransE에서 참인 트리플 (h, r, t)이 만족하도록 학습하는 관계는?
+
+- A. h · r = t
+- B. h + r ≈ t
+- C. h = r = t
+- D. h − t = 0
+
+<details><summary>정답 보기</summary>
+
+**B** — TransE는 관계를 벡터 이동으로 보아 머리 벡터에 관계 벡터를 더하면 꼬리 벡터 근처가 되도록 학습한다.
+
+</details>
+
+## 🏷 키워드
+
+지식 그래프 임베딩 (knowledge graph embedding) · 링크 예측 (link prediction) · 평균 역순위 (mean reciprocal rank)
+
+## ➡️ 다음에 공부할 것
+
+- 그래프 신경망(GNN)과 분자·결정 구조
+- LLM과 지식 그래프의 결합(GraphRAG)
+
+## 📚 참고 문헌
+
+- A. Bordes et al., Translating embeddings for modeling multi-relational data, NeurIPS, 2013
+- Z. Sun et al., RotatE: knowledge graph embedding by relational rotation in complex space, ICLR, 2019
+
+## 🔗 더 읽어보기
+
+- [📖 위키백과](https://en.wikipedia.org/w/index.php?search=Knowledge+graph+embedding)
+- [🎓 Google Scholar](https://scholar.google.com/scholar?q=Knowledge+graph+embedding)
+- [📄 arXiv](https://arxiv.org/search/?query=Knowledge+graph+embedding&searchtype=all)

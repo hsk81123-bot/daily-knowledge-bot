@@ -188,6 +188,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-03-battery-materials.json"
+    },
+    {
+      "date": "2026-11-04",
+      "topic": "ai-ontology",
+      "concept": "지식 그래프 임베딩(TransE 등)",
+      "title": "지식 그래프 임베딩: 관계를 벡터의 이동으로 배운다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-04-ai-ontology.json"
     }
   ],
   "telegram_offset": 814324503
