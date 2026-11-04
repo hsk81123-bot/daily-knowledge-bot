@@ -197,6 +197,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-04-ai-ontology.json"
+    },
+    {
+      "date": "2026-11-05",
+      "topic": "ai-machine-learning",
+      "concept": "능동 학습(active learning)",
+      "title": "능동 학습: 모델이 다음에 무엇을 측정할지 고른다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-05-ai-machine-learning.json"
     }
   ],
   "telegram_offset": 814324503
