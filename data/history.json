@@ -206,6 +206,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-05-ai-machine-learning.json"
+    },
+    {
+      "date": "2026-11-06",
+      "topic": "ai-deep-learning",
+      "concept": "활성화 함수(ReLU, GELU 등)",
+      "title": "활성화 함수: 신경망에 곡선을 넣는 장치",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-06-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503
