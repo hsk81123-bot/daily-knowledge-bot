@@ -215,6 +215,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-06-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-11-07",
+      "topic": "ai-ontology",
+      "concept": "SPARQL 질의",
+      "title": "SPARQL: 그래프 모양을 그려서 묻는 질의 언어",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-07-ai-ontology.json"
     }
   ],
   "telegram_offset": 814324503
