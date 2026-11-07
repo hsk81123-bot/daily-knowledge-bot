@@ -224,6 +224,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-07-ai-ontology.json"
+    },
+    {
+      "date": "2026-11-08",
+      "topic": "ai-machine-learning",
+      "concept": "불균형 데이터 다루기",
+      "title": "불균형 데이터: 드문 사건을 놓치지 않으려면",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-08-ai-machine-learning.json"
     }
   ],
   "telegram_offset": 814324503
