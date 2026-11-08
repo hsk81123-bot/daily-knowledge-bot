@@ -233,6 +233,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-08-ai-machine-learning.json"
+    },
+    {
+      "date": "2026-11-09",
+      "topic": "battery-electrochemistry",
+      "concept": "쿨롱 효율과 에너지 효율",
+      "title": "쿨롱 효율과 에너지 효율: 99.9%와 99.99%의 차이",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-09-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503

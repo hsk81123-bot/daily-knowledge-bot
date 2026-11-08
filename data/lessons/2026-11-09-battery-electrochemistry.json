@@ -1,0 +1,59 @@
+{
+  "concept": "쿨롱 효율과 에너지 효율",
+  "concept_en": "Coulombic efficiency",
+  "title": "쿨롱 효율과 에너지 효율: 99.9%와 99.99%의 차이",
+  "level": "입문",
+  "one_liner": "쿨롱 효율은 넣은 전하 중 꺼낸 전하의 비율이고 에너지 효율은 전압 손실까지 포함한 비율로, 쿨롱 효율의 작은 차이가 장기 수명에서는 큰 차이를 만든다.",
+  "sections": [
+    {
+      "heading": "쿨롱 효율",
+      "body": "쿨롱 효율(CE)은 방전 용량을 충전 용량으로 나눈 값이다. 100%에 못 미치는 부분은 SEI 성장, 전해질 분해, 셔틀 반응처럼 리튬이나 전하를 소모하는 부반응을 뜻한다. 상용 리튬이온 셀은 보통 99.9%를 넘고, 수천 사이클 수명을 위해서는 99.95% 이상이 필요하다."
+    },
+    {
+      "heading": "에너지 효율",
+      "body": "에너지 효율은 방전 에너지(∫V·I dt)를 충전 에너지로 나눈 값이다. 충전 전압이 방전 전압보다 높아서 생기는 전압 히스테리시스 손실이 더해지므로 쿨롱 효율보다 낮다. 고출력 운전일수록 과전압이 커져 에너지 효율이 떨어진다."
+    },
+    {
+      "heading": "작은 차이의 누적",
+      "body": "CE가 일정하다고 가정하면 n사이클 후 남는 리튬 비율은 대략 CEⁿ이다. 99.9%면 500사이클 후 약 61%, 99.99%면 약 95%가 남는다. 그래서 쿨롱 효율은 소수점 넷째 자리까지 정밀하게 재는 고정밀 충방전기가 쓰인다."
+    }
+  ],
+  "formula": "CE = Q_discharge / Q_charge\nEE = E_discharge / E_charge = CE × (평균 방전 전압 / 평균 충전 전압)\n잔존 비율 ≈ CEⁿ",
+  "example": "리튬 금속 음극의 쿨롱 효율을 평가할 때는 구리 위에 리튬을 쌓았다가 벗겨내는 Li|Cu 셀을 쓴다. 이 값이 99% 수준이면 실용 수명에 크게 못 미친다.",
+  "misconception": "쿨롱 효율이 100%보다 높게 나오면 좋은 것이라고 착각하기 쉽지만, 대개 측정 오차나 이전 사이클에 쌓인 리튬이 돌아오는 현상, 셔틀 등의 신호다.",
+  "connection": "초기 수십 사이클의 고정밀 쿨롱 효율과 용량 변화 데이터로 수천 사이클 수명을 예측하는 머신러닝 연구가 있다(초기 데이터 기반 수명 예측).",
+  "quiz": {
+    "question": "쿨롱 효율 99.9%로 500사이클 돌리면 남는 리튬 비율은 대략?",
+    "choices": [
+      "약 95%",
+      "약 61%",
+      "약 99%",
+      "약 30%"
+    ],
+    "answer_index": 1,
+    "explanation": "0.999⁵⁰⁰ ≈ e^(−0.5) ≈ 0.61. 작은 비효율도 사이클이 쌓이면 크게 누적된다."
+  },
+  "keywords": [
+    {
+      "ko": "쿨롱 효율",
+      "en": "Coulombic efficiency"
+    },
+    {
+      "ko": "에너지 효율",
+      "en": "energy efficiency"
+    },
+    {
+      "ko": "전압 히스테리시스",
+      "en": "voltage hysteresis"
+    }
+  ],
+  "next_topics": [
+    "포메이션 공정과 초기 쿨롱 효율",
+    "사이클 수명 시험과 열화 모드 분리(LLI, LAM)"
+  ],
+  "references": [
+    "A. J. Smith, J. C. Burns, S. Trussler, J. R. Dahn, Precision measurements of the coulombic efficiency of lithium-ion batteries and of electrode materials for lithium-ion batteries, J. Electrochem. Soc., 2010"
+  ],
+  "source": "library",
+  "review": false
+}
