@@ -251,6 +251,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-10-ai-ontology.json"
+    },
+    {
+      "date": "2026-11-11",
+      "topic": "battery-materials",
+      "concept": "흑연 음극과 리튬 삽입(staging)",
+      "title": "흑연 음극: 리튬이 층을 건너뛰며 채워지는 스테이징",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-11-battery-materials.json"
     }
   ],
   "telegram_offset": 814324503
