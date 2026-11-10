@@ -242,6 +242,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-09-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-11-10",
+      "topic": "ai-ontology",
+      "concept": "클래스·속성·개체(TBox와 ABox)",
+      "title": "TBox와 ABox: 개념의 규칙과 실제 데이터를 나눈다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-10-ai-ontology.json"
     }
   ],
   "telegram_offset": 814324503
