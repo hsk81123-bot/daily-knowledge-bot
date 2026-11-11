@@ -260,6 +260,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-11-battery-materials.json"
+    },
+    {
+      "date": "2026-11-12",
+      "topic": "ai-deep-learning",
+      "concept": "최적화 알고리즘(SGD, Adam)",
+      "title": "SGD와 Adam: 손실 지형을 내려가는 방법",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-12-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503
