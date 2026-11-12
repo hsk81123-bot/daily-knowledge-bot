@@ -269,6 +269,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-12-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-11-13",
+      "topic": "battery-electrochemistry",
+      "concept": "과전압의 종류(활성화·농도·저항)",
+      "title": "과전압의 세 얼굴: 활성화·농도·저항",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-13-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503
