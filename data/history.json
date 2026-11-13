@@ -278,6 +278,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-13-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-11-14",
+      "topic": "battery-analysis",
+      "concept": "GITT로 확산 계수 구하기",
+      "title": "GITT: 짧게 충전하고 오래 쉬며 확산을 읽는다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-14-battery-analysis.json"
     }
   ],
   "telegram_offset": 814324503
