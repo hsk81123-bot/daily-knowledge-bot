@@ -287,6 +287,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-14-battery-analysis.json"
+    },
+    {
+      "date": "2026-11-15",
+      "topic": "ai-deep-learning",
+      "concept": "전이 학습과 파인튜닝",
+      "title": "전이 학습: 큰 데이터에서 배운 것을 작은 문제에 옮긴다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-15-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503
