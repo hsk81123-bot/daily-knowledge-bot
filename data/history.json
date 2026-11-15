@@ -296,6 +296,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-15-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-11-16",
+      "topic": "battery-materials",
+      "concept": "바인더와 도전재",
+      "title": "바인더와 도전재: 전극의 몇 %가 성능을 좌우한다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-16-battery-materials.json"
     }
   ],
   "telegram_offset": 814324503
