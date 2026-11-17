@@ -305,6 +305,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-16-battery-materials.json"
+    },
+    {
+      "date": "2026-11-17",
+      "topic": "ai-ontology",
+      "concept": "배터리 도메인 온톨로지(EMMO, BattINFO)",
+      "title": "EMMO와 BattINFO: 배터리 데이터를 위한 공통 언어",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-17-ai-ontology.json"
     }
   ],
   "telegram_offset": 814324503

@@ -1,0 +1,73 @@
+# EMMO와 BattINFO: 배터리 데이터를 위한 공통 언어
+
+🕸️ AI › 온톨로지 · 2026-11-17 · 중급
+
+> 💡 EMMO는 재료과학과 물리를 위한 상위·중위 온톨로지이고, BattINFO는 그 위에 배터리 구성 요소·전기화학 개념·시험 방법을 정의해 배터리 데이터를 FAIR하게 만드는 도메인 온톨로지다.
+
+## EMMO
+
+Elementary Multiperspective Material Ontology(EMMO)는 유럽 재료 모델링 커뮤니티가 중심이 되어 개발한 온톨로지다. 물질, 과정, 측정, 모델, 표현(기호·수치·단위)을 일관되게 다루기 위해 설계되었다. 측정된 값이 어떤 대상의 어떤 성질을 어떤 방법으로 잰 것인지를 명시적으로 연결하는 것이 특징이다.
+
+## BattINFO
+
+Battery Interface Ontology(BattINFO)는 EMMO 기반으로 전극, 전해질, 분리막, 셀 형태, 전기화학 반응과 양, 충방전 시험 같은 개념을 정의한다. 유럽 배터리 연구 이니셔티브(BATTERY 2030+ 등) 맥락에서 개발되어 공개 저장소에서 관리된다. 셀 사양서나 시험 결과를 JSON-LD로 표현하는 예제와 도구도 함께 제공된다.
+
+## 쓰는 법과 과제
+
+모든 개념을 처음부터 익히기보다, 자기 데이터의 주요 항목(셀 형식, 양극·음극 소재, 공칭 용량, 시험 조건)을 BattINFO 개념 IRI에 연결하는 것부터 시작하는 것이 현실적이다. 온톨로지가 크고 추상적이어서 배우는 데 시간이 걸리고, 아직 개념이 계속 추가·수정되는 중이라 버전 관리가 필요하다.
+
+## 🧮 핵심 수식·원리
+
+```
+셀 사양(JSON-LD 개념 예):
+{ "@type": "CoinCell",
+  "hasPositiveElectrode": { "hasActiveMaterial": "NCM811" },
+  "hasProperty": { "@type": "NominalCapacity", "value": 3.0, "unit": "mAh" } }
+```
+
+## 🔍 예시·적용
+
+셀 제조사 사양서의 '공칭 용량 3.0 Ah, 양극 NCM811, 2032 코인셀' 정보를 BattINFO 개념으로 표현해 두면, 다른 연구실의 시험 데이터와 자동으로 연결해 같은 셀 종류끼리 비교할 수 있다.
+
+## ⚠️ 흔한 오해
+
+도메인 온톨로지를 쓰려면 모든 데이터를 한 번에 변환해야 한다고 생각하기 쉽지만, 핵심 메타데이터 몇 개부터 연결해도 검색과 통합의 이점을 얻을 수 있다.
+
+## 🔗 배터리 × AI
+
+서로 다른 연구실의 사이클 데이터를 모아 수명 예측 모델을 학습하려면 시험 조건과 셀 사양의 의미가 맞아야 한다. BattINFO는 이런 '학습 가능한 공동 데이터셋'을 만드는 기반이다.
+
+## ❓ 퀴즈
+
+BattINFO가 바탕으로 삼는 상위 온톨로지는?
+
+- A. BFO
+- B. EMMO
+- C. DOLCE
+- D. SKOS
+
+<details><summary>정답 보기</summary>
+
+**B** — BattINFO는 재료·물리용 온톨로지 EMMO 위에 배터리 개념을 정의한 도메인 온톨로지다.
+
+</details>
+
+## 🏷 키워드
+
+EMMO (Elementary Multiperspective Material Ontology) · BattINFO (Battery Interface Ontology) · FAIR 데이터 (FAIR data)
+
+## ➡️ 다음에 공부할 것
+
+- 상위 온톨로지(BFO 등)
+- RDF 트리플과 URI
+- 사이클 수명 시험과 열화 모드 분리(LLI, LAM)
+
+## 📚 참고 문헌
+
+- S. Clark et al., Toward a unified description of battery data, Advanced Energy Materials, 2022
+
+## 🔗 더 읽어보기
+
+- [📖 위키백과](https://en.wikipedia.org/w/index.php?search=Elementary+Multiperspective+Material+Ontology)
+- [🎓 Google Scholar](https://scholar.google.com/scholar?q=Elementary+Multiperspective+Material+Ontology)
+- [📄 arXiv](https://arxiv.org/search/?query=Elementary+Multiperspective+Material+Ontology&searchtype=all)
