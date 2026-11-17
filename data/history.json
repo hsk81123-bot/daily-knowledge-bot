@@ -314,6 +314,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-17-ai-ontology.json"
+    },
+    {
+      "date": "2026-11-18",
+      "topic": "battery-interface",
+      "concept": "양극 표면 코팅(Al2O3, LiNbO3 등)",
+      "title": "양극 표면 코팅: 수 nm 막으로 계면을 지키기",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-18-battery-interface.json"
     }
   ],
   "telegram_offset": 814324503
