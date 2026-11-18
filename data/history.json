@@ -323,6 +323,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-18-battery-interface.json"
+    },
+    {
+      "date": "2026-11-19",
+      "topic": "ai-llm",
+      "concept": "스케일링 법칙",
+      "title": "스케일링 법칙: 크기·데이터·계산을 늘리면 손실이 예측 가능하게 준다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-19-ai-llm.json"
     }
   ],
   "telegram_offset": 814324503
