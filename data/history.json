@@ -332,6 +332,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-19-ai-llm.json"
+    },
+    {
+      "date": "2026-11-20",
+      "topic": "ai-ontology",
+      "concept": "지식 그래프",
+      "title": "지식 그래프: 사실들을 점과 선으로 이은 거대한 연결망",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-20-ai-ontology.json"
     }
   ],
   "telegram_offset": 814324503
