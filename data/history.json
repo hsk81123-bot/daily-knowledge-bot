@@ -341,6 +341,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-20-ai-ontology.json"
+    },
+    {
+      "date": "2026-11-21",
+      "topic": "battery-electrochemistry",
+      "concept": "버틀러-볼머 식과 교환 전류 밀도",
+      "title": "버틀러-볼머 식: 전극 반응 속도는 과전압에 지수적으로 반응한다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-21-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503
