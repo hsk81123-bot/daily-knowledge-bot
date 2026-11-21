@@ -350,6 +350,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-21-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-11-22",
+      "topic": "battery-analysis",
+      "concept": "사이클 수명 시험과 열화 모드 분리(LLI, LAM)",
+      "title": "열화 모드: 리튬을 잃었나, 활물질을 잃었나",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-22-battery-analysis.json"
     }
   ],
   "telegram_offset": 814324503
