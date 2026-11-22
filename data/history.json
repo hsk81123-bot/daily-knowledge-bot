@@ -359,6 +359,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-22-battery-analysis.json"
+    },
+    {
+      "date": "2026-11-23",
+      "topic": "ai-deep-learning",
+      "concept": "배치 정규화와 레이어 정규화",
+      "title": "정규화 층: 층마다 입력의 크기를 맞춰 학습을 안정시킨다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-23-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503
