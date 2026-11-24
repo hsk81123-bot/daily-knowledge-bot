@@ -368,6 +368,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-23-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-11-24",
+      "topic": "ai-llm",
+      "concept": "디코딩 전략(temperature, top-p)",
+      "title": "디코딩 전략: 확률 분포에서 다음 토큰을 고르는 방법",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-24-ai-llm.json"
     }
   ],
   "telegram_offset": 814324503
