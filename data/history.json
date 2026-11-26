@@ -386,6 +386,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-25-battery-electrochemistry.json"
+    },
+    {
+      "date": "2026-11-26",
+      "topic": "ai-deep-learning",
+      "concept": "그래프 신경망(GNN)과 분자·결정 구조",
+      "title": "GNN: 원자를 점, 결합을 선으로 보고 배운다",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-26-ai-deep-learning.json"
     }
   ],
   "telegram_offset": 814324503
