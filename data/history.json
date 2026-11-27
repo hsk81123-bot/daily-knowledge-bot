@@ -395,6 +395,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-26-ai-deep-learning.json"
+    },
+    {
+      "date": "2026-11-27",
+      "topic": "ai-machine-learning",
+      "concept": "베이지안 최적화",
+      "title": "베이지안 최적화: 비싼 실험을 적게 하며 최적점 찾기",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-27-ai-machine-learning.json"
     }
   ],
   "telegram_offset": 814324503
