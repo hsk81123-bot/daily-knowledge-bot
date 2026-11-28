@@ -404,6 +404,15 @@
       "source": "library",
       "trigger": "daily",
       "file": "lessons/2026-11-27-ai-machine-learning.json"
+    },
+    {
+      "date": "2026-11-28",
+      "topic": "battery-electrochemistry",
+      "concept": "이온 전도도와 리튬 이온 전이수",
+      "title": "전이수: 전류 중 리튬이 실어 나르는 몫",
+      "source": "library",
+      "trigger": "daily",
+      "file": "lessons/2026-11-28-battery-electrochemistry.json"
     }
   ],
   "telegram_offset": 814324503
